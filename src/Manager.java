@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.ArrayList;
 
 public class Manager {
     private int id = 0;
@@ -30,7 +29,7 @@ public class Manager {
 
         // Создание подзадачи, в данном методе присваивается уникальный идентификатор для подзадачи, а так же
         // присваивается идентификатор эпика, которому принадлежит подзадача и добавление идентификатора в список
-        // подзадач эпики
+        // подзадач эпика
     void createTask(SubTask subTask) {
         int thisId = findId();
         int epicId = subTask.getIdEpicTask();
@@ -45,13 +44,13 @@ public class Manager {
     }
 
     // 3 метода по удалению каждой отдельной мапы по типу задачи.
-    void removingAllTask() {
+    void removeAllTask() {
         allTask.clear();
     }
 
-        // Удаление мапы эпиков с подзадачами, т.к. подзадачи без эпика существовать не могут
-    void removingAllEpicTask() {
-        for (int key: allEpicTask.keySet()) {
+        // Удаление мапы эпиков с подзадачами, т.к. подзадачи без эпика существовать не могут.
+    void removeAllEpicTask() {
+        for (int key : allEpicTask.keySet()) {
             EpicTask epicTask = allEpicTask.get(key);
             epicTask.getIdSubTask().clear();
         }
@@ -59,12 +58,36 @@ public class Manager {
         allSubTask.clear();
     }
 
-    void removingAllSubTask() {
-        for (int key: allEpicTask.keySet()) {
+    void removeAllSubTask() {
+        for (int key : allEpicTask.keySet()) {
             EpicTask epicTask = allEpicTask.get(key);
             epicTask.getIdSubTask().clear();
         }
         allSubTask.clear();
+    }
+
+    // 3 метода по удалению задач по их идентификатору.
+    void removeTaskById(int thisId) {
+        allTask.remove(thisId);
+    }
+
+        // Удаление отдельного эпика, а также удаление связанных с ним подзадач.
+    void removeEpicTaskById(int thisId) {
+        EpicTask epicTask = allEpicTask.get(thisId);
+        for (Integer id : epicTask.getIdSubTask()) {
+            allSubTask.remove(id);
+        }
+        epicTask.getIdSubTask().clear();
+        allEpicTask.remove(thisId);
+    }
+
+        // Удаление отдельной подзадачи, а так же редактирование списка 'idSubTask' у эпика
+    void removeSubTaskById(int thisId) {
+        int idEpicTask = allSubTask.get(thisId).getIdEpicTask();
+        EpicTask epicTask = allEpicTask.get(idEpicTask);
+        int idSubInEpic = epicTask.getIdSubTask().indexOf(thisId);
+        epicTask.getIdSubTask().remove(idSubInEpic);
+        allSubTask.remove(thisId);
     }
 
     public HashMap<Integer, Task> getAllTask() {
