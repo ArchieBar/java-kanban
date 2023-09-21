@@ -1,56 +1,81 @@
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Manager {
     private int id = 0;
-    private HashMap<Integer, Task> descriptionTask = new HashMap<>();
-    private HashMap<Integer, EpicTask> descriptionEpicTask = new HashMap<>();
-    private HashMap<Integer, SubTask> descriptionSubTask = new HashMap<>();
+    private HashMap<Integer, Task> allTask = new HashMap<>();
+    private HashMap<Integer, EpicTask> allEpicTask = new HashMap<>();
+    private HashMap<Integer, SubTask> allSubTask = new HashMap<>();
 
+    // Метод по созданию уникального идентификатора.
     private int findId() {
         this.id++;
         return id;
     }
 
+    // 3 метода с разной сигнатурой по созданию новой задачи / эпика / подзадачи.
     void createTask(Task task) {
-        int id = findId();
-        task.setId(id);
+        int thisId = findId();
+        task.setId(thisId);
         task.setStatus("NEW");
-        descriptionTask.put(id, task);
+        allTask.put(thisId, task);
     }
 
     void createTask(EpicTask epicTask) {
-        int id = findId();
-        epicTask.setId(id);
+        int thisId = findId();
+        epicTask.setId(thisId);
         epicTask.setStatus("NEW");
-        descriptionEpicTask.put(id, epicTask);
+        allEpicTask.put(thisId, epicTask);
     }
 
+        // Создание подзадачи, в данном методе присваивается уникальный идентификатор для подзадачи, а так же
+        // присваивается идентификатор эпика, которому принадлежит подзадача и добавление идентификатора в список
+        // подзадач эпики
     void createTask(SubTask subTask) {
-        int id = findId();
+        int thisId = findId();
         int epicId = subTask.getIdEpicTask();
-        if (descriptionEpicTask.containsKey(epicId)) {
-            subTask.setId(id);
+        if (allEpicTask.containsKey(epicId)) {
+            subTask.setId(thisId);
             subTask.setStatus("NEW");
-            descriptionSubTask.put(id, subTask);
+            allSubTask.put(thisId, subTask);
 
-            EpicTask epicTask = descriptionEpicTask.get(epicId);
-            epicTask.getIdSubTask().add(id);
+            EpicTask epicTask = allEpicTask.get(epicId);
+            epicTask.getIdSubTask().add(thisId);
         }
     }
 
+    // 3 метода по удалению каждой отдельной мапы по типу задачи.
     void removingAllTask() {
-
+        allTask.clear();
     }
 
-    public HashMap<Integer, Task> getDescriptionTask() {
-        return descriptionTask;
+        // Удаление мапы эпиков с подзадачами, т.к. подзадачи без эпика существовать не могут
+    void removingAllEpicTask() {
+        for (int key: allEpicTask.keySet()) {
+            EpicTask epicTask = allEpicTask.get(key);
+            epicTask.getIdSubTask().clear();
+        }
+        allEpicTask.clear();
+        allSubTask.clear();
     }
 
-    public HashMap<Integer, EpicTask> getDescriptionEpicTask() {
-        return descriptionEpicTask;
+    void removingAllSubTask() {
+        for (int key: allEpicTask.keySet()) {
+            EpicTask epicTask = allEpicTask.get(key);
+            epicTask.getIdSubTask().clear();
+        }
+        allSubTask.clear();
     }
 
-    public HashMap<Integer, SubTask> getDescriptionSubTask() {
-        return descriptionSubTask;
+    public HashMap<Integer, Task> getAllTask() {
+        return allTask;
+    }
+
+    public HashMap<Integer, EpicTask> getAllEpicTask() {
+        return allEpicTask;
+    }
+
+    public HashMap<Integer, SubTask> getAllSubTask() {
+        return allSubTask;
     }
 }
