@@ -5,6 +5,15 @@ public class EpicTask extends Task{
         super(name, description);
     }
 
+
+    @Override
+    public String toString() {
+        return "Название: " + super.getName() + ", "
+                + "Описание: " + super.getDescription() + ", "
+                + "Статус: " + super.getStatus() + ", "
+                + "ID: " + super.getId() + ", "
+                + "SubTaskID: " + idSubTask;
+    }
     public void setIdSubTask(int idSubTask) {
         this.idSubTask.add(idSubTask);
     }

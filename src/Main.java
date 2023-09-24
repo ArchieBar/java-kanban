@@ -19,8 +19,25 @@ public class Main {
         SubTask subTask1_2 = new SubTask("Подзадача 1_2", "Описание 1_2", 6);
         manager.createTask(subTask1_2);
 
-        System.out.println(manager.getDescriptionTask());
-        System.out.println(manager.getDescriptionSubTask());
-        System.out.println(manager.getDescriptionEpicTask());
+        System.out.println(manager.getAllTask());
+        System.out.println(manager.getAllEpicTask());
+        System.out.println(manager.getAllSubTask());
+
+        System.out.println(manager.getTaskById(1));
+        System.out.println(manager.getEpicTaskById(3));
+        System.out.println(manager.getSubTaskById(4));
+
+        System.out.println(manager.getSubTaskOfACertainEpicTask(3));
+
+        manager.updateSubTask(subTask1_1, "DONE",4);
+        manager.updateSubTask(subTask1_2, "DONE", 7);
+
+        System.out.println(manager.getAllTask());
+        System.out.println(manager.getAllEpicTask());
+        System.out.println(manager.getAllSubTask());
+
+        manager.removeAllSubTask();
+
+        manager.getAllEpicTask();
     }
 }
