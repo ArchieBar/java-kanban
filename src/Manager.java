@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Manager {
@@ -41,6 +42,30 @@ public class Manager {
             EpicTask epicTask = allEpicTask.get(epicId);
             epicTask.getIdSubTask().add(thisId);
         }
+    }
+
+    void updateTask(Task newTask, String newStatus, int thisId) {
+        newTask.setStatus(newStatus);
+        allTask.put(thisId, newTask);
+    }
+
+    void updateEpicTask(EpicTask newEpicTask, int thisId) {
+        EpicTask epicTask = allEpicTask.get(thisId);
+        String intermediateStatus = allSubTask.get(epicTask.getIdSubTask().get(0)).getStatus();
+        for (Integer idSubTask : epicTask.getIdSubTask()) {
+            if (!(intermediateStatus == allSubTask.get(idSubTask).getStatus())) {
+                intermediateStatus = "IN_PROGRESS";
+            }
+        }
+        epicTask.setStatus(intermediateStatus);
+        allEpicTask.put(thisId, newEpicTask);
+    }
+
+    void updateSubTask(SubTask newSubTask, String newStatus, int thisId) {
+        int idEpicTask = allSubTask.get(thisId).getIdEpicTask();
+        newSubTask.setStatus(newStatus);
+        allSubTask.put(thisId, newSubTask);
+        updateEpicTask(allEpicTask.get(idEpicTask), idEpicTask);
     }
 
     // 3 метода по удалению каждой отдельной мапы по типу задачи.
