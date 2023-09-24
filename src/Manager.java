@@ -44,12 +44,14 @@ public class Manager {
         }
     }
 
+<<<<<<< HEAD
     // 3 метода по обновлению задач для каждого из типов.
     void updateTask(Task newTask, String newStatus, int thisId) {
         newTask.setStatus(newStatus);
         allTask.put(thisId, newTask);
     }
 
+<<<<<<< HEAD
     // Обновление статуса эпика построено на сравнении всех элементов массива с первым
     // Если все они равны первому, то присвоить эпику статус первой подзадачи в массиве
     // Если нет, то присвоить эпику статут: "IN_PROGRESS".
