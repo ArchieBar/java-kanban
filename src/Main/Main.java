@@ -1,3 +1,12 @@
+package Main;
+
+import Manager.Manager;
+import Manager.Status;
+import Manager.TaskManager;
+import Tasks.EpicTask;
+import Tasks.SubTask;
+import Tasks.Task;
+
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = Manager.getDefault();

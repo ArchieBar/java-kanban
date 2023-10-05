@@ -1,3 +1,6 @@
+package Tasks;
+import Manager.Status;
+
 public class SubTask extends Task {
     private int idEpicTask;
     public SubTask(String name, String description, Status status, int idEpicTask) {
