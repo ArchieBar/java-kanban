@@ -27,17 +27,22 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void addHistory(Task task) {
+        if (task == null) {
+            return;
+        }
         if (nodeMap.containsKey(task.getId())) {
             remove(task.getId());
         }
         Node lastNode = last;
         Node node = new Node(last, null, task);
         last = node;
-        if (lastNode == null)
+        // Взял реализацию из LinkedLast() от LinkedList(), там не было фиг. скобочек, а я и не проверял)
+        if (lastNode == null) {
             first = node;
-        else
+        } else {
             lastNode.next = node;
-        nodeMap.put(task.getId(), node);
+            nodeMap.put(task.getId(), node);
+        }
     }
 
     @Override
@@ -48,7 +53,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             historyList.add(current.task);
             current = current.next;
         }
-        return List.copyOf(historyList);
+        return historyList;
     }
 
     @Override
