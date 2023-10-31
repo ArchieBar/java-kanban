@@ -22,22 +22,25 @@ public class Main {
         taskManager.createSubTask(subTask1_1);
         SubTask subTask2_1 = new SubTask("Подзадача 2-1", "Описание 2-1", Status.NEW,  3);
         taskManager.createSubTask(subTask2_1);
+        SubTask subTask3_1 = new SubTask("Подзадача 3-1", "Описание 3-1", Status.NEW,  3);
+        taskManager.createSubTask(subTask3_1);
 
         EpicTask epicTask2 = new EpicTask("Эпик 2", "Описание 2", Status.NEW);
         taskManager.createEpicTask(epicTask2);
-        SubTask subTask1_2 = new SubTask("Подзадача 1_2", "Описание 1_2", Status.NEW,  6);
-        taskManager.createSubTask(subTask1_2);
 
         System.out.println(taskManager.getTaskById(1));
         System.out.println(taskManager.getEpicTaskById(3));
         System.out.println(taskManager.getSubTaskById(4));
 
-        System.out.println(taskManager.getHistory());
-
         System.out.println(taskManager.getTaskById(2));
-        System.out.println(taskManager.getEpicTaskById(6));
-        System.out.println(taskManager.getSubTaskById(7));
+        System.out.println(taskManager.getEpicTaskById(7));
 
         System.out.println(taskManager.getHistory());
+
+        System.out.println(taskManager.getTaskById(1));
+
+        System.out.println(taskManager.getHistory());
+
+
     }
 }

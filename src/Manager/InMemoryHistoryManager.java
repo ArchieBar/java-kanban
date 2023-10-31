@@ -3,21 +3,66 @@ package Manager;
 import Tasks.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 public class InMemoryHistoryManager implements HistoryManager {
-    private final ArrayList<Task> history = new ArrayList<>();
-    private final static int MAX_COUNT_HISTORY = 10;
+
+    private static class Node {
+        Node prev;
+        Node next;
+        Task task;
+
+        public Node(Node prev, Node next, Task task) {
+            this.prev = prev;
+            this.next = next;
+            this.task = task;
+        }
+    }
+
+    Node first;
+    Node last;
+    Map<Integer, Node> nodeMap = new HashMap<>();
 
     @Override
     public void addHistory(Task task) {
-        history.add(task);
-        if (history.size() > MAX_COUNT_HISTORY) {
-            history.remove(0);
+        if (nodeMap.containsKey(task.getId())) {
+            remove(task.getId());
         }
+        Node node = new Node(last, null, task);
+        if (first == null && last == null) {
+            first = node;
+            last = node;
+        }
+        last.next = node;
+        last = node;
+        nodeMap.put(task.getId(), node);
     }
 
     @Override
     public List<Task> getHistory() {
-        return List.copyOf(history);
+        List<Task> historyList = new ArrayList<>();
+        Node current = first;
+        while (current != null) {
+            historyList.add(current.task);
+            current = current.next;
+        }
+        return historyList;
+    }
+
+    @Override
+    public void remove(int id) {
+        Node remove = nodeMap.remove(id);
+        if (remove.prev == null) {
+            first = remove.next;
+            remove.next.prev = null;
+        } else if (remove.next == null) {
+            last = remove.prev;
+            remove.prev.next = null;
+        } else {
+            remove.next.prev = remove.next;
+            remove.prev.next = remove.prev;
+        }
     }
 }
