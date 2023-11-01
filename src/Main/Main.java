@@ -31,16 +31,14 @@ public class Main {
         System.out.println(taskManager.getTaskById(1));
         System.out.println(taskManager.getEpicTaskById(3));
         System.out.println(taskManager.getSubTaskById(4));
-
-        taskManager.removeAllTask();
-
-        //System.out.println(taskManager.getTaskById(2));
         System.out.println(taskManager.getEpicTaskById(7));
 
         System.out.println(taskManager.getHistory());
 
-        System.out.println(taskManager.getTaskById(1));
-        System.out.println(taskManager.getTaskById(2));
+        taskManager.removeAllTask();
+
+        System.out.println(taskManager.getHistory());
+
         System.out.println(taskManager.getEpicTaskById(7));
 
         System.out.println(taskManager.getHistory());
