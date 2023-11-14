@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private void save() {
-        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter("dataStorage.csv", true))){
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter("dataStorage.csv"))){
             fileWriter.write("id,type,name,status,description,epic_id,[subtask_id]");
             fileWriter.newLine();
             for (final Task task : super.getAllTasks()) {
