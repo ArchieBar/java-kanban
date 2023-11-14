@@ -1,6 +1,6 @@
-package Manager;
+package manager;
 
-import Tasks.Task;
+import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,10 +31,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             return;
         }
 
-        if (nodeMap.containsKey(task.getId())) {
-            remove(task.getId());
-        }
-
+        remove(task.getId());
         Node lastNode = last;
         Node node = new Node(last, null, task);
         last = node;

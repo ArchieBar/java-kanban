@@ -1,5 +1,4 @@
-package Tasks;
-import Manager.Status;
+package tasks;
 
 import java.util.ArrayList;
 public class EpicTask extends Task{
@@ -22,5 +21,15 @@ public class EpicTask extends Task{
 
     public ArrayList<Integer> getSubTasksIds() {
         return subTasksIds;
+    }
+    public String getSubIdsString() {
+        if (subTasksIds.isEmpty()) {
+            return null;
+        }
+        StringBuilder subIdString = new StringBuilder();
+        for (int id : subTasksIds) {
+            subIdString.append(" " + id);
+        }
+        return subIdString.toString().trim();
     }
 }

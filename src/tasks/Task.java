@@ -1,5 +1,5 @@
-package Tasks;
-import Manager.Status;
+package tasks;
+
 public class Task {
     private String name;
     private String description;

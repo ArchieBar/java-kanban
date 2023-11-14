@@ -1,18 +1,20 @@
-package Manager;
+package manager;
 
-import Tasks.EpicTask;
-import Tasks.SubTask;
-import Tasks.Task;
+import tasks.EpicTask;
+import tasks.Status;
+import tasks.SubTask;
+import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
-    private final HashMap<Integer, Task> allTasks = new HashMap<>();
-    private final HashMap<Integer, EpicTask> allEpicTasks = new HashMap<>();
-    private final HashMap<Integer, SubTask> allSubTasks = new HashMap<>();
+    private final Map<Integer, Task> allTasks = new HashMap<>();
+    private final Map<Integer, EpicTask> allEpicTasks = new HashMap<>();
+    private final Map<Integer, SubTask> allSubTasks = new HashMap<>();
     private final HistoryManager historyManager = Manager.getDefaultHistory();
 
     /**<p>Метод по созданию уникального идентификатора</p>
