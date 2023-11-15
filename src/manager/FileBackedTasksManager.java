@@ -1,42 +1,100 @@
 package manager;
 
 import csv.CsvFormat;
-import org.w3c.dom.ls.LSOutput;
-import tasks.EpicTask;
-import tasks.SubTask;
-import tasks.Task;
-import tasks.Type;
+import tasks.*;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
+import java.nio.file.Files;
+import java.util.ArrayList;
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
+    private final File file;
+
+    public FileBackedTasksManager(File file) {
+        this.file = file;
+    }
+
+    public static void main(String[] args) {
+        final FileBackedTasksManager taskManager = Manager.getFileBackedTasksManager();
+        System.out.println(taskManager);
+    }
+
+    /**
+     * Метод по сохранению всех задач и истории просмотов в файл формата CSV
+     * Вызывается при создании, удалении, изменении и получению задач
+     */
     private void save() {
-        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter("dataStorage.csv"))){
-            fileWriter.write("id,type,name,status,description,epic_id,[subtask_id]");
-            fileWriter.newLine();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(CsvFormat.getHeadCSV());
+            bufferedWriter.newLine();
+
             for (final Task task : super.getAllTasks()) {
-                fileWriter.write(CsvFormat.taskToString(task));
-                fileWriter.newLine();
+                bufferedWriter.write(CsvFormat.taskToString(task));
+                bufferedWriter.newLine();
             }
+
             for (final EpicTask epicTask : super.getAllEpicTasks()) {
-                fileWriter.write(CsvFormat.taskToString(epicTask));
-                fileWriter.newLine();
+                bufferedWriter.write(CsvFormat.taskToString(epicTask));
+                bufferedWriter.newLine();
             }
+
             for (final SubTask subTask : super.getAllSubTasks()) {
-                fileWriter.write(CsvFormat.taskToString(subTask));
-                fileWriter.newLine();
+                bufferedWriter.write(CsvFormat.taskToString(subTask));
+                bufferedWriter.newLine();
             }
+
+            bufferedWriter.newLine();
+            bufferedWriter.write(CsvFormat.historyToString(historyManager));
+            bufferedWriter.newLine();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void load() {
+    /**
+     * Метод по загрузке всех задач и истории просмотров, а так же последнего установленного id из файла формата CSV.
+     * В конце метода вызывается сохранение всех загруженных данных в файл формата CSV
+     */
+    public static FileBackedTasksManager load(File file) {
+        final FileBackedTasksManager taskManager = new FileBackedTasksManager(file);
+        try {
+            final String csv = Files.readString(file.toPath());
+            final String[] line = csv.split(System.lineSeparator());
+            int maxId = -1;
+            for (int i = 1; i < line.length; i++) {
+                if (line[i].isBlank()) break;
+                Task task = CsvFormat.taskFromString(line[i]);
+                if (task == null) break;
+                int id = task.getId();
+                if (id > maxId) maxId = id;
+                switch (task.getType()) {
+                    case TASK:
+                        taskManager.allTasks.put(id, task);
+                        break;
+                    case SUBTASK:
+                        taskManager.allSubTasks.put(id, (SubTask) task);
+                        break;
+                    case EPICTASK:
+                        taskManager.allEpicTasks.put(id, (EpicTask) task);
+                        break;
+                }
+            }
 
+            if (!line[line.length - 1].equals(line[0])) {
+                ArrayList<Integer> historyId = CsvFormat.historyFromString(line[line.length - 1]);
+                for (int id : historyId) {
+                    taskManager.historyManager.addHistory(taskManager.findTask(id));
+                }
+            }
+            taskManager.setId(maxId);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        taskManager.save();
+        return taskManager;
     }
 
     @Override
@@ -89,8 +147,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public void removeAllSubTask() {
-     super.removeAllSubTask();
-     save();
+        super.removeAllSubTask();
+        save();
     }
 
     @Override
@@ -110,4 +168,26 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.removeSubTaskById(idSubTask);
         save();
     }
+
+    @Override
+    public Task getTaskById(int taskId) {
+        historyManager.addHistory(allTasks.get(taskId));
+        save();
+        return allTasks.get(taskId);
+    }
+
+    @Override
+    public EpicTask getEpicTaskById(int epicTaskId) {
+        historyManager.addHistory(allEpicTasks.get(epicTaskId));
+        save();
+        return allEpicTasks.get(epicTaskId);
+    }
+
+    @Override
+    public SubTask getSubTaskById(int subTaskId) {
+        historyManager.addHistory(allSubTasks.get(subTaskId));
+        save();
+        return allSubTasks.get(subTaskId);
+    }
+
 }

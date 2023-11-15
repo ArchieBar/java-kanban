@@ -1,7 +1,9 @@
 package tasks;
 
 import java.util.ArrayList;
-public class EpicTask extends Task{
+
+public class EpicTask extends Task {
+    private final Type type = Type.EPICTASK;
     private ArrayList<Integer> subTasksIds = new ArrayList<>();
     public EpicTask(String name, String description, Status status) {
         super(name, description, status);
@@ -15,6 +17,15 @@ public class EpicTask extends Task{
                 + "ID: " + super.getId() + ", "
                 + "SubTaskID: " + subTasksIds;
     }
+
+    @Override
+    public Type getType() {
+        return type;
+    }
+    public void setSubTasksIdsFromCsv(ArrayList<Integer> subTasksIds) {
+        this.subTasksIds = subTasksIds;
+    }
+
     public void setSubTasksIds(int subTasksIds) {
         this.subTasksIds.add(subTasksIds);
     }

@@ -8,10 +8,11 @@ import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.File;
+
 public class Main {
     public static void main(String[] args) {
-        //TaskManager taskManager = Manager.getDefault();
-        FileBackedTasksManager taskManager = new FileBackedTasksManager();
+        TaskManager taskManager = Manager.getDefault();
 
         Task task1 = new Task("Задача 1", "Описание 1", Status.NEW);
         taskManager.createTask(task1);
@@ -45,12 +46,6 @@ public class Main {
 
         System.out.println(taskManager.getHistory());
 
-        System.out.println(task1.getClass());
-        try {
-            System.out.println(task1.getClass() == Class.forName("tasks.Task"));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 }

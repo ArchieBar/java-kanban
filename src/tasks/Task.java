@@ -1,6 +1,7 @@
 package tasks;
 
 public class Task {
+    private final Type type = Type.TASK;
     private String name;
     private String description;
     private Status status;
@@ -10,6 +11,10 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     @Override

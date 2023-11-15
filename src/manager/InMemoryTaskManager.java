@@ -11,13 +11,19 @@ import java.util.Map;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int id = 0;
-    private final Map<Integer, Task> allTasks = new HashMap<>();
-    private final Map<Integer, EpicTask> allEpicTasks = new HashMap<>();
-    private final Map<Integer, SubTask> allSubTasks = new HashMap<>();
-    private final HistoryManager historyManager = Manager.getDefaultHistory();
 
-    /**<p>Метод по созданию уникального идентификатора</p>
+
+    private int id = 0;
+    protected final Map<Integer, Task> allTasks = new HashMap<>();
+    protected final Map<Integer, EpicTask> allEpicTasks = new HashMap<>();
+    protected final Map<Integer, SubTask> allSubTasks = new HashMap<>();
+    protected final HistoryManager historyManager = Manager.getDefaultHistory();
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /** Метод по созданию уникального идентификатора
      * @return Возвращает уникальный id
      */
     private int createId() {
@@ -25,11 +31,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Методы:
-     * createTask(Tasks.Task task),
-     * createEpicTask(Tasks.EpicTask epicTask),
-     * createSubTask(Tasks.SubTask subTask),
-     * по созданию новой задачи / эпика / подзадачи.
+     * Метод по созданию Задачи и добавлению её в список всех задач
      */
     @Override
     public void createTask(Task task) {
@@ -39,6 +41,9 @@ public class InMemoryTaskManager implements TaskManager {
         allTasks.put(thisId, task);
     }
 
+    /**
+     * Метод по созданию Эпика и добавлению её в список всех задач
+     */
     @Override
     public void createEpicTask(EpicTask epicTask) {
         int thisId = createId();
@@ -51,7 +56,6 @@ public class InMemoryTaskManager implements TaskManager {
      * Создание подзадачи, в данном методе присваивается уникальный идентификатор для подзадачи, а так же
      * присваивается идентификатор эпика, которому принадлежит подзадача и добавление идентификатора в список
      * подзадач эпика
-     * @param subTask
      */
     @Override
     public void createSubTask(SubTask subTask) {
@@ -63,17 +67,13 @@ public class InMemoryTaskManager implements TaskManager {
             allSubTasks.put(thisId, subTask);
 
             EpicTask epicTask = allEpicTasks.get(epicId);
-            epicTask.getSubTasksIds().add(thisId);
+            epicTask.setSubTasksIds(thisId);
             updateStatusEpicTask(epicTask);
         }
     }
 
     /**
-     * Методы:
-     * updateTask(Tasks.Task newTask),
-     * updateEpicTask(Tasks.EpicTask newEpicTask),
-     * updateSubTask(Tasks.SubTask newSubTask),
-     * по обновлению задач для каждого из типов.
+     * Метод по обновлению Задачи
      */
     @Override
     public void updateTask(Task newTask) {
@@ -82,6 +82,9 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    /**
+     * Метод по обновлению Эпика
+     */
     @Override
     public void updateEpicTask(EpicTask newEpicTask) {
         if (allEpicTasks.get(newEpicTask.getId()) != null) {
@@ -90,6 +93,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     }
 
+    /**
+     * Метод по обновлению Подзадачи, а так же обновление статуса Эпика
+     */
     @Override
     public void updateSubTask(SubTask newSubTask) {
         int idEpicTask = newSubTask.getIdEpicTask();
@@ -100,8 +106,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Обновление статуса эпика построено на сравнении всех элементов массива с первым,
-     * если все они равны первому, то присвоить эпику статус первой подзадачи в массиве,
+     * Обновление статуса Эпика построено на сравнении всех элементов массива с первым,
+     * если все они равны первому, то присвоить Эпику статус первой подзадачи в массиве,
      * если нет, то присвоить эпику статут: "IN_PROGRESS".
      * @param epicTask
      */
@@ -124,11 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Методы:
-     * removeAllTask(),
-     * removeAllEpicTask(),
-     * removeAllSubTask(),
-     * по удалению каждой отдельной мапы по типу задачи
+     * Метод по удалению всех Задач
      */
     @Override
     public void removeAllTask() {
@@ -139,7 +141,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Удаление мапы эпиков с подзадачами, т.к. подзадачи без эпика существовать не могут.
+     * Удаление мапы Эпиков с Подзадачами, т.к. Подзадачи без Эпика существовать не могут.
      */
     @Override
     public void removeAllEpicTask() {
@@ -153,6 +155,9 @@ public class InMemoryTaskManager implements TaskManager {
         allSubTasks.clear();
     }
 
+    /**
+     * Удаление всех Подзадач с установкой статуса "NEW" для Эпика
+     */
     @Override
     public void removeAllSubTask() {
         for (EpicTask epicTask : allEpicTasks.values()) {
@@ -166,11 +171,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Методы:
-     * .removeTaskById(Integer idTask),
-     * .removeEpicTaskById(Integer idEpicTask),
-     * .removeSubTaskById(Integer idSubTask),
-     * по удалению задач по их идентификатору.
+     * Метод по удалению Задачи по id
      */
     @Override
     public void removeTaskById(Integer idTask) {
@@ -179,8 +180,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Удаление отдельного эпика, а также удаление связанных с ним подзадач.
-     * @param idEpicTask
+     * Удаление отдельного Эпика, а также удаление связанных с ним Подзадач.
      */
     @Override
     public void removeEpicTaskById(Integer idEpicTask) {
@@ -194,8 +194,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Удаление отдельной подзадачи, а так же редактирование списка 'idSubTask' у эпика
-     * @param idSubTask
+     * Удаление отдельной подзадачи, а так же редактирование списка 'idSubTask' и статуса у Эпика
      */
     @Override
     public void removeSubTaskById(Integer idSubTask) {
@@ -208,11 +207,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Методы:
-     * getTaskById(int taskId),
-     * getEpicTaskById(int epicTaskId),
-     * getSubTaskById(int subTaskId),
-     * по получению задач каждого из типов по ID.
+     * Метод по получению Задачи по Id, а так же добавление задачи в историю
      */
     @Override
     public Task getTaskById(int taskId) {
@@ -220,12 +215,18 @@ public class InMemoryTaskManager implements TaskManager {
         return allTasks.get(taskId);
     }
 
+    /**
+     * Метод по получению Эпика по Id, а так же добавление Эпика в историю
+     */
     @Override
     public EpicTask getEpicTaskById(int epicTaskId) {
         historyManager.addHistory(allEpicTasks.get(epicTaskId));
         return allEpicTasks.get(epicTaskId);
     }
 
+    /**
+     * Метод по получению Подзадачи по Id, а так же добавление Подзадачи в историю
+     */
     @Override
     public SubTask getSubTaskById(int subTaskId) {
         historyManager.addHistory(allSubTasks.get(subTaskId));
@@ -234,8 +235,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     /**
      * Метод для получения истории просмотров задач по ID.
-     * Логика метода представлена в классе: Manager.InMemoryHistoryManager.
-     * @return Копия листа истории
+     * Логика метода представлена в классе: manager.InMemoryHistoryManager.
      */
     public List<Task> getHistory() {
         return historyManager.getHistory();
@@ -243,8 +243,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     /**
      * Метод по возвращению всех подзадач определённого эпика.
-     * @param epicTaskId
-     * @return Лист подзадач эпика
      */
     @Override
     public List<SubTask> getSubTaskOfACertainEpicTask(int epicTaskId) {
@@ -257,24 +255,45 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Методы:
-     * getAllTasks(),
-     * getAllEpicTasks(),
-     * getAllSubTasks(),
-     * по возвращению листов задач определённого типа.
+     * Метод по возвращению списка Задач
      */
     @Override
     public List<Task> getAllTasks() {
         return new ArrayList<>(allTasks.values());
     }
 
+    /**
+     * Метод по возвращению списка Эпиков
+     */
     @Override
     public List<EpicTask> getAllEpicTasks() {
         return new ArrayList<>(allEpicTasks.values());
     }
 
+    /**
+     * Метод по возвращению списка Подзадач
+     */
     @Override
     public List<SubTask> getAllSubTasks() {
         return new ArrayList<>(allSubTasks.values());
+    }
+
+    /**
+     * Метод по нахождению задачи по id из всех списков Задач, Эпиков и Подзадач
+     * @return Task task
+     * @return null при ошибке поиска
+     */
+    @Override
+    public Task findTask (int idTask) {
+        for (int id : allTasks.keySet()) {
+            if (id == idTask) return getTaskById(idTask);
+        }
+        for (int id : allSubTasks.keySet()) {
+            if (id == idTask) return getSubTaskById(idTask);
+        }
+        for (int id : allEpicTasks.keySet()) {
+            if (id == idTask) return getEpicTaskById(idTask);
+        }
+        return null;
     }
 }

@@ -47,4 +47,5 @@ public interface TaskManager {
     List<EpicTask> getAllEpicTasks();
 
     List<SubTask> getAllSubTasks();
+    Task findTask (int id);
 }
