@@ -1,10 +1,10 @@
-id,type,name,status,description,epic_id,subtask_id
-1,TASK,Задача 1,NEW,Описание 1,null,null
-2,TASK,Задача 2,NEW,Описание 2,null,null
-3,EPICTASK,Эпик 1,NEW,Описание 1,null,4 5 6
-7,EPICTASK,Эпик 2,NEW,Описание 2,null,null
-4,SUBTASK,Подзадача 1-1,NEW,Описание 1-1,3,null
-5,SUBTASK,Подзадача 2-1,NEW,Описание 2-1,3,null
-6,SUBTASK,Подзадача 3-1,NEW,Описание 3-1,3,null
+id,type,name,status,description,epic_id
+1,TASK,Задача 1,NEW,Описание 1,null
+2,TASK,Задача 2,NEW,Описание 2,null
+3,EPICTASK,Эпик 1,NEW,Описание 1,null
+7,EPICTASK,Эпик 2,NEW,Описание 2,null
+4,SUBTASK,Подзадача 1-1,NEW,Описание 1-1,3
+5,SUBTASK,Подзадача 2-1,NEW,Описание 2-1,3
+6,SUBTASK,Подзадача 3-1,NEW,Описание 3-1,3
 
-1,3,4,7
+The browsing history is empty.

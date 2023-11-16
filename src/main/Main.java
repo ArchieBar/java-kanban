@@ -2,6 +2,7 @@ package main;
 
 import manager.FileBackedTasksManager;
 import manager.Manager;
+import manager.ManagerSaveException;
 import tasks.Status;
 import manager.TaskManager;
 import tasks.EpicTask;
@@ -11,7 +12,7 @@ import tasks.Task;
 import java.io.File;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ManagerSaveException {
         TaskManager taskManager = Manager.getDefault();
 
         Task task1 = new Task("Задача 1", "Описание 1", Status.NEW);

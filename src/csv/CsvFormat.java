@@ -13,58 +13,34 @@ public class CsvFormat {
      * @return String headCSV
      */
     public static String getHeadCSV() {
-        return String.format("%s,%s,%s,%s,%s,%s,%s",
-                "id",
-                "type",
-                "name",
-                "status",
-                "description",
-                "epic_id",
-                "subtask_id");
+        return "id,type,name,status,description,epic_id";
+    }
+
+    public static String getHistoryEmpty() {
+        return "The browsing history is empty.";
     }
 
     /**
-     * Метод по приобразованию задачи в строку формата CSV: "id,type,name,status,description,epic_id,subtask_id"
+     * Метод по приобразованию задачи в строку формата CSV: "id,type,name,status,description,epic_id"
      * @return String task
-     * @return null при неверном формате
      */
     public static String taskToString(Task task) {
-        try {
-            if (task.getClass() == Class.forName("tasks.Task")) {
-                return String.format("%s,%s,%s,%s,%s,%s,%s",
-                        task.getId(),
-                        task.getType(),
-                        task.getName(),
-                        task.getStatus(),
-                        task.getDescription(),
-                        null,
-                        null);
-            } else if (task.getClass() == Class.forName("tasks.SubTask")) {
-                SubTask subTask = (SubTask) task;
-                return String.format("%s,%s,%s,%s,%s,%s,%s",
-                        subTask.getId(),
-                        subTask.getType(),
-                        subTask.getName(),
-                        subTask.getStatus(),
-                        subTask.getDescription(),
-                        subTask.getIdEpicTask(),
-                        null);
-            } else if (task.getClass() == Class.forName("tasks.EpicTask")) {
-                EpicTask epicTask = (EpicTask) task;
-                return String.format("%s,%s,%s,%s,%s,%s,%s",
-                        epicTask.getId(),
-                        epicTask.getType(),
-                        epicTask.getName(),
-                        epicTask.getStatus(),
-                        epicTask.getDescription(),
-                        null,
-                        epicTask.getSubIdsString());
-            }
-
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        if (task.getType() == Type.SUBTASK) {
+            SubTask subTask = (SubTask) task;
+            return subTask.getId() + "," +
+                    subTask.getType() + "," +
+                    subTask.getName() + "," +
+                    subTask.getStatus() + "," +
+                    subTask.getDescription() + "," +
+                    subTask.getIdEpicTask();
+        } else {
+            return task.getId() + "," +
+                    task.getType() + "," +
+                    task.getName() + "," +
+                    task.getStatus() + "," +
+                    task.getDescription() + "," +
+                    null;
         }
-        return null;
     }
 
     /**
@@ -72,6 +48,7 @@ public class CsvFormat {
      * @return Task task
      * @return null при неверном формате
      */
+
     public static Task taskFromString(String line) {
         if (line.isEmpty()) {
             return null;
@@ -79,7 +56,7 @@ public class CsvFormat {
 
         String[] dataLine = line.split(",");
 
-        if (dataLine[1].equalsIgnoreCase("Task")) {
+        if (Type.valueOf(dataLine[1]) == Type.TASK) {
 
             Task task = new Task(
                     dataLine[2],
@@ -88,7 +65,7 @@ public class CsvFormat {
             task.setId(Integer.parseInt(dataLine[0]));
 
             return task;
-        } else if (dataLine[1].equalsIgnoreCase("SubTask")) {
+        } else if (Type.valueOf(dataLine[1]) == Type.SUBTASK) {
 
             SubTask subTask = new SubTask(
                     dataLine[2],
@@ -98,23 +75,12 @@ public class CsvFormat {
             subTask.setId(Integer.parseInt(dataLine[0]));
 
             return subTask;
-        } else if (dataLine[1].equalsIgnoreCase("EpicTask")) {
-
-            String[] dataSubTaskId = (dataLine[6].split("\\s"));
-            ArrayList<Integer> subTaskIdList = new ArrayList<>();
-
-            if (!dataSubTaskId[0].equals("null")) {
-                for (String id : dataSubTaskId) {
-                    subTaskIdList.add(Integer.parseInt(id));
-                }
-            }
-
+        } else if (Type.valueOf(dataLine[1]) == Type.EPICTASK) {
 
             EpicTask epicTask = new EpicTask(
                     dataLine[2],
                     dataLine[4],
                     statusFromString(dataLine[3]));
-            epicTask.setSubTasksIdsFromCsv(subTaskIdList);
             epicTask.setId(Integer.parseInt(dataLine[0]));
 
             return epicTask;
@@ -128,6 +94,9 @@ public class CsvFormat {
      */
     public static String historyToString(HistoryManager historyManager) {
         List<Task> taskList = historyManager.getHistory();
+        if (taskList.isEmpty()) {
+            return null;
+        }
         StringBuilder historyIdString = new StringBuilder();
         for (Task task : taskList) {
             if (historyIdString.length() == 0) {
@@ -142,6 +111,9 @@ public class CsvFormat {
      * @return ArrayList<Integer> historyId
      */
     public static ArrayList<Integer> historyFromString(String line) {
+        if (line.equalsIgnoreCase(getHistoryEmpty())){
+            return null;
+        }
         ArrayList<Integer> historyId = new ArrayList<>();
         String[] dataHistoryString = line.split(",");
         for (String idString : dataHistoryString) {
