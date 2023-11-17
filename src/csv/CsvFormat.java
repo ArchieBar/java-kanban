@@ -16,10 +16,6 @@ public class CsvFormat {
         return "id,type,name,status,description,epic_id";
     }
 
-    public static String getHistoryEmpty() {
-        return "The browsing history is empty.";
-    }
-
     /**
      * Метод по приобразованию задачи в строку формата CSV: "id,type,name,status,description,epic_id"
      * @return String task
@@ -61,7 +57,7 @@ public class CsvFormat {
             Task task = new Task(
                     dataLine[2],
                     dataLine[4],
-                    statusFromString(dataLine[3]));
+                    Status.valueOf(dataLine[3]));
             task.setId(Integer.parseInt(dataLine[0]));
 
             return task;
@@ -70,7 +66,7 @@ public class CsvFormat {
             SubTask subTask = new SubTask(
                     dataLine[2],
                     dataLine[4],
-                    statusFromString(dataLine[3]),
+                    Status.valueOf(dataLine[3]),
                     Integer.parseInt(dataLine[5]));
             subTask.setId(Integer.parseInt(dataLine[0]));
 
@@ -80,7 +76,7 @@ public class CsvFormat {
             EpicTask epicTask = new EpicTask(
                     dataLine[2],
                     dataLine[4],
-                    statusFromString(dataLine[3]));
+                    Status.valueOf(dataLine[3]));
             epicTask.setId(Integer.parseInt(dataLine[0]));
 
             return epicTask;
@@ -95,7 +91,7 @@ public class CsvFormat {
     public static String historyToString(HistoryManager historyManager) {
         List<Task> taskList = historyManager.getHistory();
         if (taskList.isEmpty()) {
-            return null;
+            return "The browsing history is empty.";
         }
         StringBuilder historyIdString = new StringBuilder();
         for (Task task : taskList) {
@@ -111,7 +107,7 @@ public class CsvFormat {
      * @return ArrayList<Integer> historyId
      */
     public static ArrayList<Integer> historyFromString(String line) {
-        if (line.equalsIgnoreCase(getHistoryEmpty())){
+        if (line.equalsIgnoreCase("The browsing history is empty.")){
             return null;
         }
         ArrayList<Integer> historyId = new ArrayList<>();
@@ -120,23 +116,5 @@ public class CsvFormat {
             historyId.add(Integer.parseInt(idString));
         }
         return historyId;
-    }
-
-    /**
-     * Метод преобразования статуса списка emun из строки
-     * @return Status.enum
-     * @return null при неверном формате
-     */
-    private static Status statusFromString(String status) {
-        if (status.equalsIgnoreCase("NEW")) {
-            return Status.NEW;
-        } else if (status.equalsIgnoreCase("IN_PROGRESS")) {
-            return Status.IN_PROGRESS;
-        } else if (status.equalsIgnoreCase("DONE")) {
-            return Status.DONE;
-        } else {
-            // Обработать как исключение?
-            return null;
-        }
     }
 }

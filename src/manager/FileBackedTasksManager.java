@@ -46,9 +46,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
 
             bufferedWriter.newLine();
-            if (CsvFormat.historyToString(historyManager) == null) {
-                bufferedWriter.write(CsvFormat.getHistoryEmpty());
-            } else bufferedWriter.write(CsvFormat.historyToString(historyManager));
+            bufferedWriter.write(CsvFormat.historyToString(historyManager));
             bufferedWriter.newLine();
 
         } catch (IOException e) {

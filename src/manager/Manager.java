@@ -7,7 +7,7 @@ public class Manager {
         return new InMemoryTaskManager();
     }
     public static FileBackedTasksManager getFileBackedTasksManager() throws ManagerSaveException {
-        File file = new File("dataStorage/dataMemory.csv");
+        File file = new File("resources/dataMemory.csv");
         try {
             return FileBackedTasksManager.load(file);
         } catch (ManagerSaveException e) {
