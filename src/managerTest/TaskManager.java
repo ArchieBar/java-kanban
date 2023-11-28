@@ -1,10 +1,12 @@
-package manager;
+package managerTest;
 
-import tasks.EpicTask;
-import tasks.SubTask;
-import tasks.Task;
+import tasksTest.EpicTask;
+import tasksTest.SubTask;
+import tasksTest.Task;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public interface TaskManager {
 
@@ -14,11 +16,11 @@ public interface TaskManager {
 
     void createSubTask(SubTask subTask) throws ManagerSaveException;
 
-    void updateTask(Task newTask) throws ManagerSaveException;
+    void updateTask(Task newTask, Task oldTask) throws ManagerSaveException;
 
-    void updateEpicTask(EpicTask newEpicTask) throws ManagerSaveException;
+    void updateEpicTask(EpicTask newEpicTask, EpicTask oldEpicTask) throws ManagerSaveException;
 
-    void updateSubTask(SubTask newSubTask) throws ManagerSaveException;
+    void updateSubTask(SubTask newSubTask, SubTask oldSubTask) throws ManagerSaveException;
 
     void removeAllTask() throws ManagerSaveException;
 
@@ -47,5 +49,8 @@ public interface TaskManager {
     List<EpicTask> getAllEpicTasks();
 
     List<SubTask> getAllSubTasks();
+
     Task findTask (int id);
+
+    Set<Task> getPrioritizedTasks () throws ManagerSaveException;
 }

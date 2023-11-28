@@ -1,19 +1,24 @@
 package csv;
 
-import manager.HistoryManager;
-import tasks.*;
+import managerTest.HistoryManager;
+import tasksTest.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CsvFormat {
+
+    private final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
     /**
      * Метод для формирования нотации CSV файла
      * @return String headCSV
      */
     public static String getHeadCSV() {
-        return "id,type,name,status,description,epic_id";
+        return "id,type,name,status,description,epic_id,start_time,duration,end_Time";
     }
 
     /**
@@ -28,14 +33,19 @@ public class CsvFormat {
                     subTask.getName() + "," +
                     subTask.getStatus() + "," +
                     subTask.getDescription() + "," +
-                    subTask.getIdEpicTask();
+                    subTask.getIdEpicTask() + "," +
+                    subTask.getStartTime().format(DATE_TIME_FORMATTER) + "," +
+                    subTask.getDuration();
         } else {
             return task.getId() + "," +
                     task.getType() + "," +
                     task.getName() + "," +
                     task.getStatus() + "," +
                     task.getDescription() + "," +
-                    null;
+                    null + "," +
+                    task.getStartTime().format(DATE_TIME_FORMATTER) + "," +
+                    task.getDuration();
+
         }
     }
 
@@ -57,7 +67,9 @@ public class CsvFormat {
             Task task = new Task(
                     dataLine[2],
                     dataLine[4],
-                    Status.valueOf(dataLine[3]));
+                    Status.valueOf(dataLine[3]),
+                    LocalDateTime.parse(dataLine[6], DATE_TIME_FORMATTER),
+                    Duration.parse(dataLine[7]));
             task.setId(Integer.parseInt(dataLine[0]));
 
             return task;
@@ -67,7 +79,9 @@ public class CsvFormat {
                     dataLine[2],
                     dataLine[4],
                     Status.valueOf(dataLine[3]),
-                    Integer.parseInt(dataLine[5]));
+                    Integer.parseInt(dataLine[5]),
+                    LocalDateTime.parse(dataLine[6], DATE_TIME_FORMATTER),
+                    Duration.parse(dataLine[7]));
             subTask.setId(Integer.parseInt(dataLine[0]));
 
             return subTask;
@@ -76,7 +90,9 @@ public class CsvFormat {
             EpicTask epicTask = new EpicTask(
                     dataLine[2],
                     dataLine[4],
-                    Status.valueOf(dataLine[3]));
+                    Status.valueOf(dataLine[3]),
+                    LocalDateTime.parse(dataLine[6], DATE_TIME_FORMATTER),
+                    Duration.parse(dataLine[7]));
             epicTask.setId(Integer.parseInt(dataLine[0]));
 
             return epicTask;

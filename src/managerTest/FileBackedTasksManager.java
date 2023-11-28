@@ -1,11 +1,12 @@
-package manager;
+package managerTest;
 
 import csv.CsvFormat;
-import org.w3c.dom.ls.LSOutput;
-import tasks.*;
+import tasksTest.*;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -18,6 +19,31 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) throws ManagerSaveException {
         final FileBackedTasksManager taskManager = Manager.getFileBackedTasksManager();
+//        Task task1 = new Task("Task1", "Des",
+//                LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15));
+//        Task task2 = new Task("Task2", "Des",
+//                LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(30));
+//        Task task3 = new Task("Task3", "Des",
+//                LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(45));
+//        taskManager.createTask(task1);
+//        taskManager.createTask(task2);
+//        taskManager.createTask(task3);
+//
+//        EpicTask epicTask1 = new EpicTask("EpicTask1", "Des");
+//        EpicTask epicTask2 = new EpicTask("EpicTask2", "Des");
+//        taskManager.createEpicTask(epicTask1);
+//        taskManager.createEpicTask(epicTask2);
+//
+//        SubTask subTask1 = new SubTask("SubTask1", "Des", epicTask1.getId(),
+//                LocalDateTime.of(2023, 10, 10, 10, 0), Duration.ofMinutes(15));
+//        SubTask subTask2 = new SubTask("SubTask2", "Des", epicTask1.getId(),
+//                LocalDateTime.of(2024, 10, 10, 10, 0), Duration.ofMinutes(30));
+//        SubTask subTask3 = new SubTask("SubTask3", "Des", epicTask2.getId(),
+//                LocalDateTime.of(2020, 11, 10, 10, 0), Duration.ofMinutes(60));
+//        taskManager.createSubTask(subTask1);
+//        taskManager.createSubTask(subTask2);
+//        taskManager.createSubTask(subTask3);
+
         System.out.println(taskManager);
     }
 
@@ -129,20 +155,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task newTask) throws ManagerSaveException {
-        super.updateTask(newTask);
+    public void updateTask(Task newTask, Task oldTask) throws ManagerSaveException {
+        super.updateTask(newTask, oldTask);
         save();
     }
 
     @Override
-    public void updateEpicTask(EpicTask newEpicTask) throws ManagerSaveException {
-        super.updateEpicTask(newEpicTask);
+    public void updateEpicTask(EpicTask newEpicTask, EpicTask oldEpicTask) throws ManagerSaveException {
+        super.updateEpicTask(newEpicTask, oldEpicTask);
         save();
     }
 
     @Override
-    public void updateSubTask(SubTask newSubTask) throws ManagerSaveException {
-        super.updateSubTask(newSubTask);
+    public void updateSubTask(SubTask newSubTask, SubTask oldSubTask) throws ManagerSaveException {
+        super.updateSubTask(newSubTask, oldSubTask);
         save();
     }
 

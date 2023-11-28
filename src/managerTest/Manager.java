@@ -1,4 +1,4 @@
-package manager;
+package managerTest;
 
 import java.io.File;
 
