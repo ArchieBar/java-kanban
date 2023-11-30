@@ -41,7 +41,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private Map<LocalDateTime, Boolean> fillInTimeGrid() {
         Map<LocalDateTime, Boolean> newTimeGrid = new TreeMap<>();
-        final LocalDateTime startTime = LocalDateTime.of(2020, 1, 1, 0,0);
+        final LocalDateTime startTime = LocalDateTime.of(2020, 1, 1, 0, 0);
         final LocalDateTime endTime = startTime.plusYears(5);
         LocalDateTime thisTime = startTime;
         while (!thisTime.isEqual(endTime)) {
@@ -62,11 +62,15 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             minutesForReturn = dateTime.getMinute() + (minuteInterval - remains);
         }
-        return LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
+        if (minutesForReturn == 60) {
+            return LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
+                    dateTime.getHour() + 1, 0);
+        } else return LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
                 dateTime.getHour(), minutesForReturn);
+
     }
 
-    private Boolean checkTimeIntersection(Task task) {
+    private void checkTimeIntersection(Task task) throws ManagerSaveException {
         boolean intermediaStatus = false;
         LocalDateTime time = findNearestDate(task.getStartTime());
         LocalDateTime endTime = findNearestDate(task.getEndTime());
@@ -74,23 +78,35 @@ public class InMemoryTaskManager implements TaskManager {
             if (timeGrid.get(time)) {
                 intermediaStatus = true;
                 timeGrid.put(time, false);
-            } else return false;
+            }
             time = time.plusMinutes(15);
         }
-        return intermediaStatus;
+        if (intermediaStatus) {
+            prioritizedTasks.add(task);
+        } else throw new ManagerSaveException("Время задач не может пересекаться.");
     }
+
+    private void removeBusyTime(Task oldTask) {
+        LocalDateTime time = findNearestDate(oldTask.getStartTime());
+        LocalDateTime endTime = findNearestDate(oldTask.getEndTime());
+        while (!time.isEqual(endTime)) {
+            if (!timeGrid.get(time)) {
+                timeGrid.put(time, true);
+            }
+            time = time.plusMinutes(15);
+        }
+        prioritizedTasks.remove(oldTask);
+    }
+
     /**
      * Метод по созданию Задачи и добавлению её в список всех задач
      */
     @Override
     public void createTask(Task task) throws ManagerSaveException {
-        if (checkTimeIntersection(task)) {
-            int thisId = createId();
-            task.setId(thisId);
-            allTasks.put(thisId, task);
-        } else throw new ManagerSaveException("Время задач не может пересекаться.");
-
-
+        checkTimeIntersection(task);
+        int thisId = createId();
+        task.setId(thisId);
+        allTasks.put(thisId, task);
     }
 
     /**
@@ -110,18 +126,17 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void createSubTask(SubTask subTask) throws ManagerSaveException {
-        if (checkTimeIntersection(subTask)) {
-            int epicId = subTask.getIdEpicTask();
-            if (allEpicTasks.containsKey(epicId)) {
-                int thisId = createId();
-                subTask.setId(thisId);
-                allSubTasks.put(thisId, subTask);
+        checkTimeIntersection(subTask);
+        int epicId = subTask.getIdEpicTask();
+        if (allEpicTasks.containsKey(epicId)) {
+            int thisId = createId();
+            subTask.setId(thisId);
+            allSubTasks.put(thisId, subTask);
 
-                EpicTask epicTask = allEpicTasks.get(epicId);
-                epicTask.setSubTasksIds(thisId);
-                updateStatusAndTimeOfEpicTask(epicTask);
-            } else throw new ManagerSaveException("EpicTask with id: " + epicId + " not found.");
-        } else throw new ManagerSaveException("Время задач не может пересекаться.");
+            EpicTask epicTask = allEpicTasks.get(epicId);
+            epicTask.setSubTasksIds(thisId);
+            updateStatusAndTimeOfEpicTask(epicTask);
+        } else throw new ManagerSaveException("EpicTask with id: " + epicId + " not found.");
     }
 
     /**
@@ -130,7 +145,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task newTask, Task oldTask) throws ManagerSaveException {
         if (allTasks.get(oldTask.getId()) != null) {
-            oldTask.setId(oldTask.getId());
+            removeBusyTime(oldTask);
+            checkTimeIntersection(newTask);
+            newTask.setId(oldTask.getId());
             allTasks.put(newTask.getId(), newTask);
         }
     }
@@ -142,6 +159,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpicTask(EpicTask newEpicTask, EpicTask oldEpicTask) throws ManagerSaveException {
         if (allEpicTasks.get(oldEpicTask.getId()) != null) {
             newEpicTask.setId(oldEpicTask.getId());
+            newEpicTask.setSubTasksIds(oldEpicTask.getSubTasksIds());
             allEpicTasks.put(newEpicTask.getId(), newEpicTask);
         }
 
@@ -153,7 +171,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubTask(SubTask newSubTask, SubTask oldSubTask) throws ManagerSaveException {
         int idEpicTask = oldSubTask.getIdEpicTask();
+        removeBusyTime(oldSubTask);
         if (allSubTasks.get(oldSubTask.getId()) != null && allEpicTasks.get(idEpicTask) != null) {
+            checkTimeIntersection(newSubTask);
             newSubTask.setId(oldSubTask.getId());
             allSubTasks.put(oldSubTask.getId(), newSubTask);
             updateStatusAndTimeOfEpicTask(allEpicTasks.get(idEpicTask));
@@ -224,6 +244,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (EpicTask epicTask : allEpicTasks.values()) {
             historyManager.remove(epicTask.getId());
             for (int idSubTask : epicTask.getSubTasksIds()) {
+                removeBusyTime(allSubTasks.get(idSubTask));
                 historyManager.remove(idSubTask);
             }
         }
@@ -241,6 +262,7 @@ public class InMemoryTaskManager implements TaskManager {
             updateStatusAndTimeOfEpicTask(epicTask);
         }
         for (SubTask subTask : allSubTasks.values()) {
+            removeBusyTime(subTask);
             historyManager.remove(subTask.getId());
         }
         allSubTasks.clear();
@@ -252,6 +274,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTaskById(Integer idTask) throws ManagerSaveException {
         historyManager.remove(idTask);
+        removeBusyTime(getTaskById(idTask));
         allTasks.remove(idTask);
     }
 
@@ -261,9 +284,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpicTaskById(Integer idEpicTask) throws ManagerSaveException {
         EpicTask epicTask = allEpicTasks.get(idEpicTask);
-        for (Integer id : epicTask.getSubTasksIds()) {
-            historyManager.remove(id);
-            allSubTasks.remove(id);
+        for (int idSubTask : epicTask.getSubTasksIds()) {
+            historyManager.remove(idSubTask);
+            removeBusyTime(getSubTaskById(idSubTask));
+            allSubTasks.remove(idSubTask);
         }
         historyManager.remove(idEpicTask);
         allEpicTasks.remove(idEpicTask);
@@ -278,6 +302,7 @@ public class InMemoryTaskManager implements TaskManager {
         EpicTask epicTask = allEpicTasks.get(idEpicTask);
         epicTask.getSubTasksIds().remove(idSubTask);
         historyManager.remove(idSubTask);
+        removeBusyTime(getSubTaskById(idSubTask));
         allSubTasks.remove(idSubTask);
         updateStatusAndTimeOfEpicTask(allEpicTasks.get(idEpicTask));
     }
@@ -286,7 +311,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по получению Задачи по Id, а так же добавление задачи в историю
      */
     @Override
-    public Task getTaskById(int taskId) throws ManagerSaveException {
+    public Task getTaskById(Integer taskId) throws ManagerSaveException {
         historyManager.addHistory(allTasks.get(taskId));
         return allTasks.get(taskId);
     }
@@ -295,7 +320,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по получению Эпика по Id, а так же добавление Эпика в историю
      */
     @Override
-    public EpicTask getEpicTaskById(int epicTaskId) throws ManagerSaveException {
+    public EpicTask getEpicTaskById(Integer epicTaskId) throws ManagerSaveException {
         historyManager.addHistory(allEpicTasks.get(epicTaskId));
         return allEpicTasks.get(epicTaskId);
     }
@@ -304,7 +329,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по получению Подзадачи по Id, а так же добавление Подзадачи в историю
      */
     @Override
-    public SubTask getSubTaskById(int subTaskId) throws ManagerSaveException {
+    public SubTask getSubTaskById(Integer subTaskId) throws ManagerSaveException {
         historyManager.addHistory(allSubTasks.get(subTaskId));
         return allSubTasks.get(subTaskId);
     }
@@ -321,7 +346,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по возвращению всех подзадач определённого эпика.
      */
     @Override
-    public List<SubTask> getSubTaskOfACertainEpicTask(int epicTaskId) {
+    public List<SubTask> getSubTaskOfACertainEpicTask(Integer epicTaskId) {
         ArrayList<Integer> allIdSubTask = allEpicTasks.get(epicTaskId).getSubTasksIds();
         ArrayList<SubTask> subTasksOfACertainEpicTask = new ArrayList<>();
         for (int idSubTask : allIdSubTask) {
@@ -361,7 +386,7 @@ public class InMemoryTaskManager implements TaskManager {
      * @return null при ошибке поиска
      */
     @Override
-    public Task findTask(int idTask) {
+    public Task findTask(Integer idTask) {
         for (int id : allTasks.keySet()) {
             if (id == idTask) {
                 return allTasks.get(idTask);
@@ -381,9 +406,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public TreeSet<Task> getPrioritizedTasks(){
-        prioritizedTasks.addAll(getAllTasks());
-        prioritizedTasks.addAll(getAllSubTasks());
-        return prioritizedTasks;
+    public List<Task> getPrioritizedTasks() {
+        return List.copyOf(prioritizedTasks);
     }
 }

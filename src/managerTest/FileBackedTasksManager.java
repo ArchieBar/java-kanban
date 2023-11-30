@@ -76,7 +76,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             bufferedWriter.newLine();
 
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка сохранения файла: " + file.getName(), e);
+            throw new ManagerSaveException("Ошибка сохранения файла: " + file.getName());
         }
     }
 
@@ -130,7 +130,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             taskManager.setId(Math.max(maxId, 0));
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка загрузки файла: " + file.getName(), e);
+            throw new ManagerSaveException("Ошибка загрузки файла: " + file.getName());
         }
 
         return taskManager;
@@ -209,21 +209,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task getTaskById(int taskId) throws ManagerSaveException {
+    public Task getTaskById(Integer taskId) throws ManagerSaveException {
         historyManager.addHistory(allTasks.get(taskId));
         save();
         return allTasks.get(taskId);
     }
 
     @Override
-    public EpicTask getEpicTaskById(int epicTaskId) throws ManagerSaveException {
+    public EpicTask getEpicTaskById(Integer epicTaskId) throws ManagerSaveException {
         historyManager.addHistory(allEpicTasks.get(epicTaskId));
         save();
         return allEpicTasks.get(epicTaskId);
     }
 
     @Override
-    public SubTask getSubTaskById(int subTaskId) throws ManagerSaveException {
+    public SubTask getSubTaskById(Integer subTaskId) throws ManagerSaveException {
         historyManager.addHistory(allSubTasks.get(subTaskId));
         save();
         return allSubTasks.get(subTaskId);

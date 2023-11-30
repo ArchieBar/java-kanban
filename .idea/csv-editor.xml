@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\test\resourcesTest\CorrectDataMemoryTest.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\test\resourcesTest\dataMemoryTest.csv">
           <value>
             <Attribute>

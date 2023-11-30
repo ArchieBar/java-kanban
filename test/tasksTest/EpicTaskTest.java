@@ -19,7 +19,7 @@ class EpicTaskTest {
 
         taskManager.createSubTask(
                 new SubTask("SubTask", "Description", epicTask.getId(), Status.IN_PROGRESS,
-                        LocalDateTime.of(2012, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                        LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(15)));
         assertEquals(Status.IN_PROGRESS, epicTask.getStatus());
 
         taskManager.removeAllSubTask();
@@ -34,11 +34,11 @@ class EpicTaskTest {
         assertEquals(Status.NEW, epicTask.getStatus());
 
         taskManager.createSubTask(new SubTask("SubTask1", "Description", epicTask.getId(),
-                LocalDateTime.of(2010, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15)));
         taskManager.createSubTask(new SubTask("SubTask2", "Description", epicTask.getId(),
-                LocalDateTime.of(2011, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15)));
         taskManager.createSubTask(new SubTask("SubTask3", "Description", epicTask.getId(),
-                LocalDateTime.of(2012, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(15)));
         assertEquals(Status.NEW, epicTask.getStatus());
     }
 
@@ -50,11 +50,11 @@ class EpicTaskTest {
         assertEquals(Status.NEW, epicTask.getStatus());
 
         taskManager.createSubTask(new SubTask("SubTask1", "Description", epicTask.getId(), Status.DONE,
-                LocalDateTime.of(2010, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15)));
         taskManager.createSubTask(new SubTask("SubTask2", "Description", epicTask.getId(), Status.DONE,
-                LocalDateTime.of(2011, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15)));
         taskManager.createSubTask(new SubTask("SubTask3", "Description", epicTask.getId(), Status.DONE,
-                LocalDateTime.of(2012, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(15)));
         assertEquals(Status.DONE, epicTask.getStatus());
     }
 
@@ -66,11 +66,11 @@ class EpicTaskTest {
         assertEquals(Status.NEW, epicTask.getStatus());
 
         taskManager.createSubTask(new SubTask("SubTask1", "Description", epicTask.getId(), Status.NEW,
-                LocalDateTime.of(2010, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15)));
         taskManager.createSubTask(new SubTask("SubTask2", "Description", epicTask.getId(), Status.NEW,
-                LocalDateTime.of(2011, 10, 10, 10, 0), Duration.ofMinutes(15)));
-        taskManager.createSubTask(new SubTask("SubTask3", "Description", epicTask.getId(), Status.NEW,
-                LocalDateTime.of(2012, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15)));
+        taskManager.createSubTask(new SubTask("SubTask3", "Description", epicTask.getId(), Status.DONE,
+                LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(15)));
         assertEquals(Status.IN_PROGRESS, epicTask.getStatus());
     }
 
@@ -82,11 +82,11 @@ class EpicTaskTest {
         assertEquals(Status.NEW, epicTask.getStatus());
 
         taskManager.createSubTask(new SubTask("SubTask1", "Description", epicTask.getId(), Status.IN_PROGRESS,
-                LocalDateTime.of(2010, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15)));
         taskManager.createSubTask(new SubTask("SubTask2", "Description", epicTask.getId(), Status.IN_PROGRESS,
-                LocalDateTime.of(2011, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15)));
         taskManager.createSubTask(new SubTask("SubTask3", "Description", epicTask.getId(), Status.IN_PROGRESS,
-                LocalDateTime.of(2012, 10, 10, 10, 0), Duration.ofMinutes(15)));
+                LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(15)));
         assertEquals(Status.IN_PROGRESS, epicTask.getStatus());
     }
 }

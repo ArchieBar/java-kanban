@@ -9,9 +9,10 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 class InMemoryHistoryManagerTest {
+
     @Test
-    public void addHistory() throws ManagerSaveException {
-        TaskManager taskManager = Manager.getDefault();
+    public void CheckingForCorrectnessOfAddingATaskToHistoryList() throws ManagerSaveException {
+        TaskManager taskManager = new InMemoryTaskManager();
         Task task1 = new Task("Task", "Description",
                 LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15));
         Task task2 = new Task("Task", "Description",
@@ -29,7 +30,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void remove() throws ManagerSaveException {
+    public void CheckingForCorrectnessOfDeletingATaskFromHistoryList() throws ManagerSaveException {
         TaskManager taskManager = Manager.getDefault();
         Task task1 = new Task("Task", "Description",
                 LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15));

@@ -11,7 +11,7 @@ public class Manager {
         try {
             return FileBackedTasksManager.load(file);
         } catch (ManagerSaveException e) {
-            throw new ManagerSaveException("Невозможно загрузить файл: " + file.getName(), e);
+            throw new ManagerSaveException("Невозможно загрузить файл: " + file.getName());
         }
     }
 

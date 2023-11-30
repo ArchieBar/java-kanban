@@ -59,6 +59,9 @@ class FileBackedTasksManagerTest extends AbstractTaskManagerTest<FileBackedTasks
         File file = new File("test/resourcesTest/dataMemoryTestForLoad.csv");
         FileBackedTasksManager taskManager = FileBackedTasksManager.load(file);
 
-        assertEquals(taskManager.getAllTasks().size(), 3);
+        assertEquals(taskManager.getAllTasks().size() +
+                taskManager.getAllSubTasks().size() +
+                taskManager.getAllEpicTasks().size(), 5);
+        assertEquals(taskManager.getHistory().size(), 3);
     }
 }

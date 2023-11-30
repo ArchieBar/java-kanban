@@ -16,7 +16,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     T taskManager;
 
     @Test
-    void createTask() throws ManagerSaveException {
+    void checkingCorrectnessOfTaskCreation() throws ManagerSaveException {
         Task task = new Task("Task", "Description",
                 LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(15));
         taskManager.createTask(task);
@@ -25,7 +25,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void createEpicTask() throws ManagerSaveException {
+    void checkingCorrectnessOfEpicTaskCreation() throws ManagerSaveException {
         EpicTask epicTask = new EpicTask("Task", "Description");
         taskManager.createEpicTask(epicTask);
         assertEquals(epicTask.getId(), 1);
@@ -33,7 +33,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void createSubTask() throws ManagerSaveException {
+    void checkingCorrectnessOfSubTaskCreation() throws ManagerSaveException {
         final IOException exception_1 = assertThrows(IOException.class,
                 () -> taskManager.createSubTask(
                         new SubTask("SubTask", "Description", -1,
@@ -52,7 +52,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateTask() throws ManagerSaveException{
+    void checkingForCorrectnessOfTaskUpdate() throws ManagerSaveException{
         Task task = new Task("Task", "Description",
                 LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(15));
         taskManager.createTask(task);
@@ -65,7 +65,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateEpicTask() throws ManagerSaveException {
+    void checkingForCorrectnessOfEpicTaskUpdate() throws ManagerSaveException {
         EpicTask epicTask = new EpicTask("Task", "Description");
         taskManager.createEpicTask(epicTask);
         assertEquals(taskManager.getAllEpicTasks().get(0), epicTask);
@@ -76,7 +76,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateSubTask() throws ManagerSaveException{
+    void checkingForCorrectnessOfSubTaskUpdate() throws ManagerSaveException{
         EpicTask epicTask = new EpicTask("Task", "Description");
         taskManager.createEpicTask(epicTask);
         SubTask subTask = new SubTask("SubTask", "Description", 1,
@@ -93,7 +93,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeAllTask() throws ManagerSaveException{
+    void checkingForCorrectnessOfDeletingAllTasks() throws ManagerSaveException{
         Task task1 = new Task("Task", "Description",
                 LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15));
         Task task2 = new Task("Task", "Description",
@@ -110,7 +110,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeAllEpicTask() throws ManagerSaveException{
+    void checkingForCorrectnessOfDeletingAllEpicTasks() throws ManagerSaveException{
         EpicTask epicTask1 = new EpicTask("EpicTask", "Description");
         EpicTask epicTask2 = new EpicTask("EpicTask", "Description");
         EpicTask epicTask3 = new EpicTask("EpicTask", "Description");
@@ -132,7 +132,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeAllSubTask() throws ManagerSaveException{
+    void checkingForCorrectnessOfDeletingAllSubTasks() throws ManagerSaveException{
         EpicTask epicTask1 = new EpicTask("EpicTask", "Description");
         EpicTask epicTask2 = new EpicTask("EpicTask", "Description");
         taskManager.createEpicTask(epicTask1);
@@ -155,7 +155,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeTaskById() throws ManagerSaveException{
+    void checkingForCorrectnessOfDeletingATaskById() throws ManagerSaveException{
         Task task1 = new Task("Task", "Description",
                 LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15));
         Task task2 = new Task("Task", "Description",
@@ -169,7 +169,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeEpicTaskById() throws ManagerSaveException {
+    void CheckingForCorrectnessOfDeletingAnEpicByIdAndDeletingAllItsSubTasks() throws ManagerSaveException {
         EpicTask epicTask1 = new EpicTask("Task", "Description");
         EpicTask epicTask2 = new EpicTask("Task", "Description");
         taskManager.createEpicTask(epicTask1);
@@ -186,13 +186,13 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeSubTaskById() throws ManagerSaveException {
+    void checkingForCorrectnessOfDeletingSubTasksByIdAndEditingListOfIdsOfAssociatedEpic() throws ManagerSaveException {
         EpicTask epicTask = new EpicTask("Task", "Description");
         taskManager.createEpicTask(epicTask);
         SubTask subTask1 = new SubTask("SubTask", "Description", 1,
-                LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15));
+                LocalDateTime.of(2020, 10, 10, 10, 10), Duration.ofMinutes(15));
         SubTask subTask2 = new SubTask("SubTask", "Description", 1,
-                LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15));
+                LocalDateTime.of(2021, 10, 10, 10, 5), Duration.ofMinutes(15));
         SubTask subTask3 = new SubTask("SubTask", "Description", 1,
                 LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(15));
         taskManager.createSubTask(subTask1);
@@ -209,11 +209,11 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getTaskById() throws ManagerSaveException {
+    void checkingForCorrectnessOfReturnedTask() throws ManagerSaveException {
         Task task1 = new Task("Task", "Description",
-                LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15));
+                LocalDateTime.of(2021, 10, 10, 10, 40), Duration.ofMinutes(15));
         Task task2 = new Task("Task", "Description",
-                LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(15));
+                LocalDateTime.of(2022, 10, 10, 10, 39), Duration.ofMinutes(15));
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         assertEquals(taskManager.getAllTasks().size(), 2);
@@ -222,7 +222,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getEpicTaskById() throws ManagerSaveException{
+    void checkingForCorrectnessOfReturnedEpicTask() throws ManagerSaveException{
         EpicTask epicTask1 = new EpicTask("EpicTask", "Description");
         EpicTask epicTask2 = new EpicTask("EpicTask", "Description");
         taskManager.createEpicTask(epicTask1);
@@ -233,7 +233,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getSubTaskById() throws ManagerSaveException{
+    void checkingForCorrectnessOfReturnedSubTask() throws ManagerSaveException{
         EpicTask epicTask = new EpicTask("EpicTask", "Description");
         taskManager.createEpicTask(epicTask);
         SubTask subTask1 = new SubTask("SubTask", "Description", epicTask.getId(),
@@ -251,7 +251,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getHistory() throws ManagerSaveException{
+    void checkingForCorrectnessOfReturnedHistoryList() throws ManagerSaveException{
         Task task = new Task("Task", "Description",
                 LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15));
         taskManager.createTask(task);
@@ -279,7 +279,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getSubTaskOfACertainEpicTask() throws ManagerSaveException{
+    void checkingForCorrectnessOfReturnedSubtaskFromConnectedEpic() throws ManagerSaveException{
         EpicTask epicTask = new EpicTask("EpicTask", "Description");
         taskManager.createEpicTask(epicTask);
         SubTask subTask1 = new SubTask("SubTask", "Description", epicTask.getId(),
@@ -296,7 +296,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getAllTasks() throws ManagerSaveException{
+    void CheckingCorrectnessOfReturnedListOfAllTasks() throws ManagerSaveException{
         Task task1 = new Task("Task", "Description",
                 LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15));
         Task task2 = new Task("Task", "Description",
@@ -312,7 +312,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getAllEpicTasks() throws ManagerSaveException{
+    void CheckingCorrectnessOfReturnedListOfAllEpicTasks() throws ManagerSaveException{
         EpicTask epicTask1 = new EpicTask("EpicTask", "Description");
         EpicTask epicTask2 = new EpicTask("EpicTask", "Description");
         EpicTask epicTask3 = new EpicTask("EpicTask", "Description");
@@ -325,7 +325,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getAllSubTasks() throws ManagerSaveException{
+    void CheckingCorrectnessOfReturnedListOfAllSubTasks() throws ManagerSaveException{
         EpicTask epicTask = new EpicTask("EpicTask", "Description");
         taskManager.createEpicTask(epicTask);
         SubTask subTask1 = new SubTask("SubTask", "Description", epicTask.getId(),
@@ -343,7 +343,7 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void findTask() throws ManagerSaveException{
+    void checkingForCorrectnessOfReturnedTaskOfAnyTypeByItsId() throws ManagerSaveException{
         Task task = new Task("Task", "Description",
                 LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15));
         taskManager.createTask(task);

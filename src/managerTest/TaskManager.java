@@ -34,15 +34,15 @@ public interface TaskManager {
 
     void removeSubTaskById(Integer idSubTask) throws ManagerSaveException;
 
-    Task getTaskById(int taskId) throws ManagerSaveException;
+    Task getTaskById(Integer taskId) throws ManagerSaveException;
 
-    EpicTask getEpicTaskById(int epicTaskId) throws ManagerSaveException;
+    EpicTask getEpicTaskById(Integer epicTaskId) throws ManagerSaveException;
 
-    SubTask getSubTaskById(int subTaskId) throws ManagerSaveException;
+    SubTask getSubTaskById(Integer subTaskId) throws ManagerSaveException;
 
     List<Task> getHistory();
 
-    List<SubTask> getSubTaskOfACertainEpicTask(int epicTaskId);
+    List<SubTask> getSubTaskOfACertainEpicTask(Integer epicTaskId);
 
     List<Task> getAllTasks();
 
@@ -50,7 +50,7 @@ public interface TaskManager {
 
     List<SubTask> getAllSubTasks();
 
-    Task findTask (int id);
+    Task findTask (Integer id);
 
-    Set<Task> getPrioritizedTasks () throws ManagerSaveException;
+    List<Task> getPrioritizedTasks () throws ManagerSaveException;
 }
