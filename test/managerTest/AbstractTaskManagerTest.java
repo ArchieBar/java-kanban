@@ -355,4 +355,15 @@ abstract class AbstractTaskManagerTest<T extends TaskManager> {
 
         assertEquals(taskManager.findTask(1), task);
     }
+
+    @Test
+    void CheckingForCorrectnessOfExceptionOutputAtTimeIntersection() throws ManagerSaveException{
+        Task task = new Task("Task", "Description",
+                LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15));
+        taskManager.createTask(task);
+       final IOException exception = assertThrows(IOException.class,
+               () -> taskManager.createTask(new Task("Task", "Description",
+                       LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(15))));
+        assertEquals(exception.getMessage(), "Время задач не может пересекаться.");
+    }
 }
