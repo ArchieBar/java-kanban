@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileBackedTasksManagerTest extends AbstractTaskManagerTest<FileBackedTasksManager>{
     @BeforeEach
     public void setUp() {
-        File file = new File("test/resourcesTest/dataMemoryTest.csv");
+        File file = new File("test/resources/dataMemoryTest.csv");
         taskManager = new FileBackedTasksManager(file);
     }
 
     @Test
     public void checkingCorrectnessOfSaving() throws IOException {
-        File fileTest = new File("test/resourcesTest/dataMemoryTest.csv");
-        File correctFile = new File("test/resourcesTest/dataMemoryTest.csv");
+        File fileTest = new File("test/resources/dataMemoryTest.csv");
+        File correctFile = new File("test/resources/dataMemoryTest.csv");
         taskManager = new FileBackedTasksManager(fileTest);
         Task task1 = new Task("Task1", "Des",
                 LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15));
@@ -56,7 +56,7 @@ class FileBackedTasksManagerTest extends AbstractTaskManagerTest<FileBackedTasks
 
     @Test
     public void checkingCorrectnessOfLoad() throws ManagerSaveException {
-        File file = new File("test/resourcesTest/dataMemoryTestForLoad.csv");
+        File file = new File("test/resources/dataMemoryTestForLoad.csv");
         FileBackedTasksManager taskManager = FileBackedTasksManager.load(file);
 
         assertEquals(taskManager.getAllTasks().size() +
