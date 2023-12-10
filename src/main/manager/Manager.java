@@ -1,8 +1,13 @@
-package managerTest;
+package main.manager;
+
+import com.google.gson.Gson;
 
 import java.io.File;
 
 public class Manager {
+    public static Gson getGson() {
+        return new Gson();
+    }
     public static TaskManager getDefault() {
         return new InMemoryTaskManager();
     }

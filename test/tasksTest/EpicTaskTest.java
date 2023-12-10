@@ -1,9 +1,13 @@
 package tasksTest;
 
-import managerTest.InMemoryTaskManager;
-import managerTest.ManagerSaveException;
+import main.manager.InMemoryTaskManager;
+import main.manager.ManagerSaveException;
 import org.junit.jupiter.api.Test;
+import main.tasks.EpicTask;
+import main.tasks.Status;
+import main.tasks.SubTask;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -11,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTaskTest {
     @Test
-    public void checkingTheStatusWithAnEmptyListOfSubtasks() throws ManagerSaveException {
+    public void checkingTheStatusWithAnEmptyListOfSubtasks() throws IOException {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
         EpicTask epicTask = new EpicTask("Epic", "Description");
         taskManager.createEpicTask(epicTask);
@@ -27,7 +31,7 @@ class EpicTaskTest {
     }
 
     @Test
-    public void checkingTheStatusOfTheEpicWithTheStatusOfAllSubtasksNew() throws ManagerSaveException {
+    public void checkingTheStatusOfTheEpicWithTheStatusOfAllSubtasksNew() throws IOException {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
         EpicTask epicTask = new EpicTask("Epic", "Description");
         taskManager.createEpicTask(epicTask);
@@ -43,7 +47,7 @@ class EpicTaskTest {
     }
 
     @Test
-    public void checkingTheStatusOfTheEpicWithTheStatusOfAllSubtasksDone() throws ManagerSaveException {
+    public void checkingTheStatusOfTheEpicWithTheStatusOfAllSubtasksDone() throws IOException {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
         EpicTask epicTask = new EpicTask("Epic", "Description");
         taskManager.createEpicTask(epicTask);
@@ -59,7 +63,7 @@ class EpicTaskTest {
     }
 
     @Test
-    public void checkingTheStatusOfTheEpicWithTheStatusOfSubtasksNewAndDone() throws ManagerSaveException {
+    public void checkingTheStatusOfTheEpicWithTheStatusOfSubtasksNewAndDone() throws IOException {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
         EpicTask epicTask = new EpicTask("Epic", "Description");
         taskManager.createEpicTask(epicTask);
@@ -75,7 +79,7 @@ class EpicTaskTest {
     }
 
     @Test
-    public void checkingTheStatusOfTheEpicWithTheStatusOfAllSubtasksInProgress() throws ManagerSaveException {
+    public void checkingTheStatusOfTheEpicWithTheStatusOfAllSubtasksInProgress() throws IOException {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
         EpicTask epicTask = new EpicTask("Epic", "Description");
         taskManager.createEpicTask(epicTask);

@@ -1,11 +1,16 @@
-package tasksTest;
+package main.tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class SubTask extends Task {
-    private final static Type TYPE = Type.SUBTASK;
+    private final static ClassTask CLASS_TASK = ClassTask.SUBTASK;
     private int idEpicTask;
+
+    public SubTask(String name, String description, int idEpicTask) {
+        super(name, description);
+        this.idEpicTask = idEpicTask;
+    }
 
     public SubTask(String name, String description, int idEpicTask, LocalDateTime startTime, Duration duration) {
         super(name, description, startTime, duration);
@@ -32,8 +37,8 @@ public class SubTask extends Task {
                 + "EpicID: " + idEpicTask;
     }
     @Override
-    public Type getType() {
-        return TYPE;
+    public ClassTask getType() {
+        return CLASS_TASK;
     }
 
     public int getIdEpicTask() {

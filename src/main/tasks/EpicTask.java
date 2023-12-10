@@ -1,11 +1,11 @@
-package tasksTest;
+package main.tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class EpicTask extends Task {
-    private final static Type TYPE = Type.EPICTASK;
+    private final static ClassTask CLASS_TASK = ClassTask.EPICTASK;
     private ArrayList<Integer> subTasksIds = new ArrayList<>();
     private LocalDateTime endTime;
 
@@ -29,8 +29,8 @@ public class EpicTask extends Task {
     }
 
     @Override
-    public Type getType() {
-        return TYPE;
+    public ClassTask getType() {
+        return CLASS_TASK;
     }
 
     public void setSubTasksIds(int subTasksIds) {

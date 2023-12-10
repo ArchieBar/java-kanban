@@ -1,10 +1,12 @@
 package managerTest;
 
+import main.manager.ManagerSaveException;
+import main.manager.TaskManager;
 import org.junit.jupiter.api.Test;
-import tasksTest.EpicTask;
-import tasksTest.Status;
-import tasksTest.SubTask;
-import tasksTest.Task;
+import main.tasks.EpicTask;
+import main.tasks.Status;
+import main.tasks.SubTask;
+import main.tasks.Task;
 
 import java.io.IOException;
 import java.time.Duration;

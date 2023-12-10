@@ -10,21 +10,21 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\test\resourcesTest\CorrectDataMemoryTest.csv">
+        <entry key="\test\resources\CorrectDataMemoryTest.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="\test\resourcesTest\dataMemoryTest.csv">
+        <entry key="\test\resources\dataMemoryTest.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="\test\resourcesTest\dataMemoryTestForLoad.csv">
+        <entry key="\test\resources\dataMemoryTestForLoad.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

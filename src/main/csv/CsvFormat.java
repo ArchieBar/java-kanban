@@ -1,7 +1,7 @@
-package csv;
+package main.csv;
 
-import managerTest.HistoryManager;
-import tasksTest.*;
+import main.manager.HistoryManager;
+import main.tasks.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CsvFormat {
 
-    private final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+//    private final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
     /**
      * Метод для формирования нотации CSV файла
@@ -26,7 +26,7 @@ public class CsvFormat {
      * @return String task
      */
     public static String taskToString(Task task) {
-        if (task.getType() == Type.SUBTASK) {
+        if (task.getType() == ClassTask.SUBTASK) {
             SubTask subTask = (SubTask) task;
             return subTask.getId() + "," +
                     subTask.getType() + "," +
@@ -34,7 +34,7 @@ public class CsvFormat {
                     subTask.getStatus() + "," +
                     subTask.getDescription() + "," +
                     subTask.getIdEpicTask() + "," +
-                    subTask.getStartTime()+ "," +
+                    subTask.getStartTime().format(Task.DATE_TIME_FORMATTER) + "," +
                     subTask.getDuration();
         } else {
             return task.getId() + "," +
@@ -43,7 +43,7 @@ public class CsvFormat {
                     task.getStatus() + "," +
                     task.getDescription() + "," +
                     null + "," +
-                    task.getStartTime() + "," +
+                    task.getStartTime().format(Task.DATE_TIME_FORMATTER) + "," +
                     task.getDuration();
 
         }
@@ -62,36 +62,36 @@ public class CsvFormat {
 
         String[] dataLine = line.split(",");
 
-        if (Type.valueOf(dataLine[1]) == Type.TASK) {
+        if (ClassTask.valueOf(dataLine[1]) == ClassTask.TASK) {
 
             Task task = new Task(
                     dataLine[2],
                     dataLine[4],
                     Status.valueOf(dataLine[3]),
-                    LocalDateTime.parse(dataLine[6], DATE_TIME_FORMATTER),
+                    LocalDateTime.parse(dataLine[6], Task.DATE_TIME_FORMATTER),
                     Duration.parse(dataLine[7]));
             task.setId(Integer.parseInt(dataLine[0]));
 
             return task;
-        } else if (Type.valueOf(dataLine[1]) == Type.SUBTASK) {
+        } else if (ClassTask.valueOf(dataLine[1]) == ClassTask.SUBTASK) {
 
             SubTask subTask = new SubTask(
                     dataLine[2],
                     dataLine[4],
                     Status.valueOf(dataLine[3]),
                     Integer.parseInt(dataLine[5]),
-                    LocalDateTime.parse(dataLine[6], DATE_TIME_FORMATTER),
+                    LocalDateTime.parse(dataLine[6], Task.DATE_TIME_FORMATTER),
                     Duration.parse(dataLine[7]));
             subTask.setId(Integer.parseInt(dataLine[0]));
 
             return subTask;
-        } else if (Type.valueOf(dataLine[1]) == Type.EPICTASK) {
+        } else if (ClassTask.valueOf(dataLine[1]) == ClassTask.EPICTASK) {
 
             EpicTask epicTask = new EpicTask(
                     dataLine[2],
                     dataLine[4],
                     Status.valueOf(dataLine[3]),
-                    LocalDateTime.parse(dataLine[6], DATE_TIME_FORMATTER),
+                    LocalDateTime.parse(dataLine[6], Task.DATE_TIME_FORMATTER),
                     Duration.parse(dataLine[7]));
             epicTask.setId(Integer.parseInt(dataLine[0]));
 

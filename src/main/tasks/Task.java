@@ -1,19 +1,22 @@
-package tasksTest;
+package main.tasks;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Task {
 
-    private final static Type TYPE = Type.TASK;
+    public final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+    private final static ClassTask CLASS_TASK = ClassTask.TASK;
     private String name;
     private String description;
     private Status status;
-    protected Duration duration;
+    protected Duration duration = Duration.ofMinutes(15);
     protected LocalDateTime startTime = null;
     private int id = -1;
 
-    protected Task(String name, String description) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
@@ -41,8 +44,8 @@ public class Task {
         this.duration = duration;
     }
 
-    public Type getType() {
-        return TYPE;
+    public ClassTask getType() {
+        return CLASS_TASK;
     }
 
     @Override
@@ -98,7 +101,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(duration);
+            return startTime.plus(duration);
     }
 
     public void setStartTime(LocalDateTime startTime) {

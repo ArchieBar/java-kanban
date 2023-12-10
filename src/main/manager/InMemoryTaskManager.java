@@ -1,10 +1,8 @@
-package managerTest;
+package main.manager;
 
-import tasksTest.EpicTask;
-import tasksTest.Status;
-import tasksTest.SubTask;
-import tasksTest.Task;
+import main.tasks.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -102,7 +100,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по созданию Задачи и добавлению её в список всех задач
      */
     @Override
-    public void createTask(Task task) throws ManagerSaveException {
+    public void createTask(Task task) throws IOException {
         checkTimeIntersection(task);
         int thisId = createId();
         task.setId(thisId);
@@ -113,7 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по созданию Эпика и добавлению её в список всех задач
      */
     @Override
-    public void createEpicTask(EpicTask epicTask) throws ManagerSaveException {
+    public void createEpicTask(EpicTask epicTask) throws IOException {
         int thisId = createId();
         epicTask.setId(thisId);
         allEpicTasks.put(thisId, epicTask);
@@ -125,7 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
      * подзадач эпика
      */
     @Override
-    public void createSubTask(SubTask subTask) throws ManagerSaveException {
+    public void createSubTask(SubTask subTask) throws IOException {
         checkTimeIntersection(subTask);
         int epicId = subTask.getIdEpicTask();
         if (allEpicTasks.containsKey(epicId)) {
@@ -143,7 +141,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по обновлению Задачи
      */
     @Override
-    public void updateTask(Task newTask, Task oldTask) throws ManagerSaveException {
+    public void updateTask(Task newTask, Task oldTask) throws IOException {
         if (allTasks.get(oldTask.getId()) != null) {
             removeBusyTime(oldTask);
             checkTimeIntersection(newTask);
@@ -156,7 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по обновлению Эпика
      */
     @Override
-    public void updateEpicTask(EpicTask newEpicTask, EpicTask oldEpicTask) throws ManagerSaveException {
+    public void updateEpicTask(EpicTask newEpicTask, EpicTask oldEpicTask) throws IOException {
         if (allEpicTasks.get(oldEpicTask.getId()) != null) {
             newEpicTask.setId(oldEpicTask.getId());
             newEpicTask.setSubTasksIds(oldEpicTask.getSubTasksIds());
@@ -169,7 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по обновлению Подзадачи, а так же обновление статуса Эпика
      */
     @Override
-    public void updateSubTask(SubTask newSubTask, SubTask oldSubTask) throws ManagerSaveException {
+    public void updateSubTask(SubTask newSubTask, SubTask oldSubTask) throws IOException {
         int idEpicTask = oldSubTask.getIdEpicTask();
         removeBusyTime(oldSubTask);
         if (allSubTasks.get(oldSubTask.getId()) != null && allEpicTasks.get(idEpicTask) != null) {
@@ -229,7 +227,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по удалению всех Задач
      */
     @Override
-    public void removeAllTask() throws ManagerSaveException {
+    public void removeAllTask() throws IOException {
         for (Task task : allTasks.values()) {
             historyManager.remove(task.getId());
         }
@@ -240,7 +238,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Удаление мапы Эпиков с Подзадачами, т.к. Подзадачи без Эпика существовать не могут.
      */
     @Override
-    public void removeAllEpicTask() throws ManagerSaveException {
+    public void removeAllEpicTask() throws IOException {
         for (EpicTask epicTask : allEpicTasks.values()) {
             historyManager.remove(epicTask.getId());
             for (int idSubTask : epicTask.getSubTasksIds()) {
@@ -256,7 +254,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Удаление всех Подзадач с установкой статуса "NEW" для Эпика
      */
     @Override
-    public void removeAllSubTask() throws ManagerSaveException {
+    public void removeAllSubTask() throws IOException {
         for (EpicTask epicTask : allEpicTasks.values()) {
             epicTask.getSubTasksIds().clear();
             updateStatusAndTimeOfEpicTask(epicTask);
@@ -272,7 +270,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по удалению Задачи по id
      */
     @Override
-    public void removeTaskById(Integer idTask) throws ManagerSaveException {
+    public void removeTaskById(Integer idTask) throws IOException {
         historyManager.remove(idTask);
         removeBusyTime(getTaskById(idTask));
         allTasks.remove(idTask);
@@ -282,7 +280,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Удаление отдельного Эпика, а также удаление связанных с ним Подзадач.
      */
     @Override
-    public void removeEpicTaskById(Integer idEpicTask) throws ManagerSaveException {
+    public void removeEpicTaskById(Integer idEpicTask) throws IOException {
         EpicTask epicTask = allEpicTasks.get(idEpicTask);
         for (int idSubTask : epicTask.getSubTasksIds()) {
             historyManager.remove(idSubTask);
@@ -297,7 +295,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Удаление отдельной подзадачи, а так же редактирование списка 'idSubTask' и статуса у Эпика
      */
     @Override
-    public void removeSubTaskById(Integer idSubTask) throws ManagerSaveException {
+    public void removeSubTaskById(Integer idSubTask) throws IOException {
         int idEpicTask = allSubTasks.get(idSubTask).getIdEpicTask();
         EpicTask epicTask = allEpicTasks.get(idEpicTask);
         epicTask.getSubTasksIds().remove(idSubTask);
@@ -311,7 +309,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по получению Задачи по Id, а так же добавление задачи в историю
      */
     @Override
-    public Task getTaskById(Integer taskId) throws ManagerSaveException {
+    public Task getTaskById(Integer taskId) throws IOException {
         historyManager.addHistory(allTasks.get(taskId));
         return allTasks.get(taskId);
     }
@@ -320,7 +318,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по получению Эпика по Id, а так же добавление Эпика в историю
      */
     @Override
-    public EpicTask getEpicTaskById(Integer epicTaskId) throws ManagerSaveException {
+    public EpicTask getEpicTaskById(Integer epicTaskId) throws IOException {
         historyManager.addHistory(allEpicTasks.get(epicTaskId));
         return allEpicTasks.get(epicTaskId);
     }
@@ -329,7 +327,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Метод по получению Подзадачи по Id, а так же добавление Подзадачи в историю
      */
     @Override
-    public SubTask getSubTaskById(Integer subTaskId) throws ManagerSaveException {
+    public SubTask getSubTaskById(Integer subTaskId) throws IOException {
         historyManager.addHistory(allSubTasks.get(subTaskId));
         return allSubTasks.get(subTaskId);
     }
@@ -386,7 +384,7 @@ public class InMemoryTaskManager implements TaskManager {
      * @return null при ошибке поиска
      */
     @Override
-    public Task findTask(Integer idTask) {
+    public Task findTask(Integer idTask) throws NullPointerException {
         for (int id : allTasks.keySet()) {
             if (id == idTask) {
                 return allTasks.get(idTask);
@@ -402,7 +400,28 @@ public class InMemoryTaskManager implements TaskManager {
                 return allEpicTasks.get(idTask);
             }
         }
-        return null;
+        throw new NullPointerException("Задача с id: " + id + " не  найдена.");
+    }
+
+    @Override
+    public void deleteById(Integer id) throws IOException {
+        Task taskForDelete = findTask(id);
+        if (taskForDelete != null) {
+            ClassTask classTask = taskForDelete.getType();
+            switch (classTask) {
+                case TASK:
+                    removeTaskById(id);
+                    break;
+                case SUBTASK:
+                    removeSubTaskById(id);
+                    break;
+                case EPICTASK:
+                    removeEpicTaskById(id);
+                    break;
+                default:
+                    throw new IOException("Задач с таким классом: " + classTask + "не найденно");
+            }
+        }
     }
 
     @Override

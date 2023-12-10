@@ -1,12 +1,12 @@
-package managerTest;
+package main.manager;
 
-import csv.CsvFormat;
-import tasksTest.*;
+import main.csv.CsvFormat;
+import main.tasks.Task;
+import main.tasks.EpicTask;
+import main.tasks.SubTask;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -19,31 +19,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) throws ManagerSaveException {
         final FileBackedTasksManager taskManager = Manager.getFileBackedTasksManager();
-//        Task task1 = new Task("Task1", "Des",
-//                LocalDateTime.of(2020, 10, 10, 10, 0), Duration.ofMinutes(15));
-//        Task task2 = new Task("Task2", "Des",
-//                LocalDateTime.of(2021, 10, 10, 10, 0), Duration.ofMinutes(30));
-//        Task task3 = new Task("Task3", "Des",
-//                LocalDateTime.of(2022, 10, 10, 10, 0), Duration.ofMinutes(45));
-//        taskManager.createTask(task1);
-//        taskManager.createTask(task2);
-//        taskManager.createTask(task3);
-//
-//        EpicTask epicTask1 = new EpicTask("EpicTask1", "Des");
-//        EpicTask epicTask2 = new EpicTask("EpicTask2", "Des");
-//        taskManager.createEpicTask(epicTask1);
-//        taskManager.createEpicTask(epicTask2);
-//
-//        SubTask subTask1 = new SubTask("SubTask1", "Des", epicTask1.getId(),
-//                LocalDateTime.of(2023, 10, 10, 10, 0), Duration.ofMinutes(15));
-//        SubTask subTask2 = new SubTask("SubTask2", "Des", epicTask1.getId(),
-//                LocalDateTime.of(2024, 10, 10, 10, 0), Duration.ofMinutes(30));
-//        SubTask subTask3 = new SubTask("SubTask3", "Des", epicTask2.getId(),
-//                LocalDateTime.of(2020, 11, 10, 10, 0), Duration.ofMinutes(60));
-//        taskManager.createSubTask(subTask1);
-//        taskManager.createSubTask(subTask2);
-//        taskManager.createSubTask(subTask3);
-
         System.out.println(taskManager);
     }
 
@@ -51,7 +26,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      * Метод по сохранению всех задач и истории просмотов в файл формата CSV
      * Вызывается при создании, удалении, изменении и получению задач
      */
-    private void save() throws ManagerSaveException {
+    protected void save() throws ManagerSaveException, IOException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(CsvFormat.getHeadCSV());
             bufferedWriter.newLine();
@@ -137,93 +112,93 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createTask(Task task) throws ManagerSaveException {
+    public void createTask(Task task) throws IOException {
         super.createTask(task);
         save();
     }
 
     @Override
-    public void createSubTask(SubTask subTask) throws ManagerSaveException {
+    public void createSubTask(SubTask subTask) throws IOException {
         super.createSubTask(subTask);
         save();
     }
 
     @Override
-    public void createEpicTask(EpicTask epicTask) throws ManagerSaveException {
+    public void createEpicTask(EpicTask epicTask) throws IOException {
         super.createEpicTask(epicTask);
         save();
     }
 
     @Override
-    public void updateTask(Task newTask, Task oldTask) throws ManagerSaveException {
+    public void updateTask(Task newTask, Task oldTask) throws IOException {
         super.updateTask(newTask, oldTask);
         save();
     }
 
     @Override
-    public void updateEpicTask(EpicTask newEpicTask, EpicTask oldEpicTask) throws ManagerSaveException {
+    public void updateEpicTask(EpicTask newEpicTask, EpicTask oldEpicTask) throws IOException {
         super.updateEpicTask(newEpicTask, oldEpicTask);
         save();
     }
 
     @Override
-    public void updateSubTask(SubTask newSubTask, SubTask oldSubTask) throws ManagerSaveException {
+    public void updateSubTask(SubTask newSubTask, SubTask oldSubTask) throws IOException {
         super.updateSubTask(newSubTask, oldSubTask);
         save();
     }
 
     @Override
-    public void removeAllTask() throws ManagerSaveException {
+    public void removeAllTask() throws IOException {
         super.removeAllTask();
         save();
     }
 
     @Override
-    public void removeAllEpicTask() throws ManagerSaveException {
+    public void removeAllEpicTask() throws IOException {
         super.removeAllEpicTask();
         save();
     }
 
     @Override
-    public void removeAllSubTask() throws ManagerSaveException {
+    public void removeAllSubTask() throws IOException {
         super.removeAllSubTask();
         save();
     }
 
     @Override
-    public void removeTaskById(Integer idTask) throws ManagerSaveException {
+    public void removeTaskById(Integer idTask) throws IOException {
         super.removeTaskById(idTask);
         save();
     }
 
     @Override
-    public void removeEpicTaskById(Integer idEpicTask) throws ManagerSaveException {
+    public void removeEpicTaskById(Integer idEpicTask) throws IOException {
         super.removeEpicTaskById(idEpicTask);
         save();
     }
 
     @Override
-    public void removeSubTaskById(Integer idSubTask) throws ManagerSaveException {
+    public void removeSubTaskById(Integer idSubTask) throws IOException {
         super.removeSubTaskById(idSubTask);
         save();
     }
 
     @Override
-    public Task getTaskById(Integer taskId) throws ManagerSaveException {
+    public Task getTaskById(Integer taskId) throws IOException {
         historyManager.addHistory(allTasks.get(taskId));
         save();
         return allTasks.get(taskId);
     }
 
     @Override
-    public EpicTask getEpicTaskById(Integer epicTaskId) throws ManagerSaveException {
+    public EpicTask getEpicTaskById(Integer epicTaskId) throws IOException {
         historyManager.addHistory(allEpicTasks.get(epicTaskId));
         save();
         return allEpicTasks.get(epicTaskId);
     }
 
     @Override
-    public SubTask getSubTaskById(Integer subTaskId) throws ManagerSaveException {
+    public SubTask getSubTaskById(Integer subTaskId) throws IOException {
         historyManager.addHistory(allSubTasks.get(subTaskId));
         save();
         return allSubTasks.get(subTaskId);

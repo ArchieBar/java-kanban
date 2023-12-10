@@ -1,10 +1,11 @@
 package managerTest;
 
-import org.junit.jupiter.api.BeforeEach;
+import main.manager.InMemoryHistoryManager;
+import main.manager.ManagerSaveException;
 import org.junit.jupiter.api.Test;
-import tasksTest.EpicTask;
-import tasksTest.SubTask;
-import tasksTest.Task;
+import main.tasks.EpicTask;
+import main.tasks.SubTask;
+import main.tasks.Task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
