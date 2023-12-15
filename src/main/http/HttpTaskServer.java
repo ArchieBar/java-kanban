@@ -11,6 +11,7 @@ import main.manager.Manager;
 import main.manager.ManagerSaveException;
 import main.manager.TaskManager;
 import main.tasks.EpicTask;
+import main.tasks.Status;
 import main.tasks.SubTask;
 import main.tasks.Task;
 
@@ -23,6 +24,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -32,11 +35,10 @@ public class HttpTaskServer {
     public static final int PORT = 8080;
     private final Gson gson;
     private final HttpServer server;
-    private final HttpClient client = HttpClient.newHttpClient();
     private final TaskManager taskManager;
 
     public HttpTaskServer() throws IOException {
-        this(Manager.getFileBackedTasksManager());
+        this(Manager.getHttpTaskManager());
     }
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {
@@ -50,7 +52,6 @@ public class HttpTaskServer {
         try {
             String path = httpExchange.getRequestURI().getPath();
             String requestMethod = httpExchange.getRequestMethod();
-            String query = httpExchange.getRequestURI().getQuery();
             switch (requestMethod) {
                 case "GET": {
                     if (Pattern.matches("^/tasks/task/$", path)) {
@@ -95,7 +96,11 @@ public class HttpTaskServer {
                         }
                     } else if (Pattern.matches("^/tasks/subTask/epic/\\d+$", path)) {
                         String pathId = path.replaceFirst("/tasks/subTask/epic/", "");
-                        int id = parsePathId(pathId);
+                        Integer id = parsePathId(pathId);
+                        if (!taskManager.getAllEpicTasks().contains(id)) {
+                            System.out.println("Epic с таким id:" + id + "не найден.");
+                            httpExchange.sendResponseHeaders(404,0);
+                        }
                         if (id != -1) {
                             List<SubTask> subTaskList = taskManager.getSubTaskOfACertainEpicTask(id);
                             // TODO добавить обработку исключения, когда не найден epic по id
@@ -134,50 +139,81 @@ public class HttpTaskServer {
                     JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
 
                     if (Pattern.matches("^/tasks/task/$", path)) {
-                        // FIXME
-                        //  немного не понимаю, как правильно создать задачу через метод POST,
-                        //  какие конструкторы нужно предусмотреть
                         Task task = new Task(jsonObject.get("name").getAsString(),
-                                jsonObject.get("description").getAsString());
+                                jsonObject.get("description").getAsString(),
+                                LocalDateTime.parse(jsonObject.get("date").getAsString(), Task.DATE_TIME_FORMATTER),
+                                Duration.ofMinutes(jsonObject.get("duration").getAsInt()));
 
-                        if (taskManager.getAllTasks().contains(task)) {
-                            // TODO taskManager.updateTask(newTask, oldTask);
-                            System.out.println("Update");
-                        } else {
-                            taskManager.createTask(task);
+                        if (jsonObject.has("status")) {
+                            Status status = Status.statusFromString(jsonObject.get("status").getAsString());
+                            task.setStatus(status);
                         }
-                        httpExchange.sendResponseHeaders(200, 0);
-                        System.out.println("Задача успешно создана: " + task);
+
+                        try {
+                            if (jsonObject.has("id")) {
+                                int id = jsonObject.get("id").getAsInt();
+                                Task oldTask = taskManager.getTaskById(id);
+                                taskManager.updateTask(task, oldTask);
+                                System.out.println("Задача успешно обновлена: " + task);
+                            } else {
+                                taskManager.createTask(task);
+                                System.out.println("Задача успешно создана: " + task);
+                            }
+
+                            httpExchange.sendResponseHeaders(200, 0);
+                        } catch (ManagerSaveException e) {
+                            httpExchange.sendResponseHeaders(405, 0);
+                        }
+
                     } else if (Pattern.matches("^/tasks/subTask/$", path)) {
-                        // FIXME
-                        //  немного не понимаю, как правильно создать задачу через метод POST,
-                        //  какие конструкторы нужно предусмотреть
                         SubTask task = new SubTask(jsonObject.get("name").getAsString(),
-                                jsonObject.get("description").getAsString(), jsonObject.get("epicId").getAsInt());
+                                jsonObject.get("description").getAsString(),
+                                jsonObject.get("idEpic").getAsInt(),
+                                LocalDateTime.parse(jsonObject.get("date").getAsString(), Task.DATE_TIME_FORMATTER),
+                                Duration.ofMinutes(jsonObject.get("duration").getAsInt()));
 
-                        if (taskManager.getAllSubTasks().contains(task)) {
-                            // TODO taskManager.updateSubTask(newTask, oldTask);
-                            System.out.println("Update");
-                        } else {
-                            taskManager.createSubTask(task);
+                        if (jsonObject.has("status")) {
+                            Status status = Status.statusFromString(jsonObject.get("status").getAsString());
+                            task.setStatus(status);
                         }
-                        httpExchange.sendResponseHeaders(200, 0);
-                        System.out.println("Задача успешно создана: " + task);
+
+                        try {
+                            if (jsonObject.has("id")) {
+                                int id = jsonObject.get("id").getAsInt();
+                                SubTask oldTask = taskManager.getSubTaskById(id);
+                                taskManager.updateSubTask(task, oldTask);
+                                System.out.println("Задача успешно обновлена: " + task);
+                            } else {
+                                taskManager.createSubTask(task);
+                                System.out.println("Задача успешно создана: " + task);
+                            }
+
+                            httpExchange.sendResponseHeaders(200, 0);
+                        } catch (ManagerSaveException e) {
+                            httpExchange.sendResponseHeaders(405, 0);
+                        }
+
                     } else if (Pattern.matches("^/tasks/epic/$", path)) {
-                        // FIXME
-                        //  немного не понимаю, как правильно создать задачу через метод POST,
-                        //  какие конструкторы нужно предусмотреть
                         EpicTask task = new EpicTask(jsonObject.get("name").getAsString(),
-                                jsonObject.get("description").getAsString());
+                                jsonObject.get("description").getAsString()
+                        );
 
-                        if (taskManager.getAllEpicTasks().contains(task)) {
-                            // TODO taskManager.updateEpicTask(newTask, oldTask);
-                            System.out.println("Update");
-                        } else {
-                            taskManager.createEpicTask(task);
+                        try {
+                            if (jsonObject.has("id")) {
+                                int id = jsonObject.get("id").getAsInt();
+                                EpicTask oldTask = taskManager.getEpicTaskById(id);
+                                taskManager.updateEpicTask(task, oldTask);
+                                System.out.println("Задача успешно обновлена: " + task);
+                            } else {
+                                taskManager.createEpicTask(task);
+                                System.out.println("Задача успешно создана: " + task);
+                            }
+
+                            httpExchange.sendResponseHeaders(200, 0);
+                        } catch (ManagerSaveException e) {
+                            httpExchange.sendResponseHeaders(405, 0);
                         }
-                        httpExchange.sendResponseHeaders(200, 0);
-                        System.out.println("Задача успешно создана: " + task);
+
                     } else {
                         System.out.println("Получен некорректный запрос - " + path);
                         httpExchange.sendResponseHeaders(405, 0);
@@ -248,7 +284,6 @@ public class HttpTaskServer {
     public void start() {
         System.out.println("Запускаем HttpTaskServer на порту " + PORT);
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
-//        System.out.println("API_TOKEN: " + apiToken);
         server.start();
     }
 

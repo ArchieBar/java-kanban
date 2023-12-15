@@ -57,9 +57,10 @@ class FileBackedTasksManagerTest extends AbstractTaskManagerTest<FileBackedTasks
     }
 
     @Test
-    public void checkingCorrectnessOfLoad() throws ManagerSaveException {
+    public void checkingCorrectnessOfLoad() throws IOException, InterruptedException {
         File file = new File("test/resources/dataMemoryTestForLoad.csv");
-        FileBackedTasksManager taskManager = FileBackedTasksManager.load(file);
+        FileBackedTasksManager taskManager = new FileBackedTasksManager(file);
+        taskManager.load();
 
         assertEquals(taskManager.getAllTasks().size() +
                 taskManager.getAllSubTasks().size() +

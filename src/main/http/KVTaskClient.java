@@ -3,32 +3,39 @@ package main.http;
 import main.manager.ManagerSaveException;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class KVTaskClient {
-    private final String url;
+    private final URL url;
     private final String apiToken;
+    private final HttpClient client = HttpClient.newHttpClient();
+    private final HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
 
-    public KVTaskClient(int port) {
-        url = "http://localhost:" + port + "/";
+    public KVTaskClient(int port) throws MalformedURLException {
+        url = new URL("http://localhost:" + port + "/");
         apiToken = register(url);
     }
 
-    private String register(String url) {
+    private String register(URL url) {
         try{
-            HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + "register"))
                     .GET()
+                    .uri(URI.create(url + "register"))
                     .build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
-        } catch (IOException | InterruptedException e) {
+            return client.send(request, handler).body();
+        } catch (IOException e) {
+            System.out.println("Ошибка IOException!");
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            System.out.println("Ошибка InterruptedException!");
             throw new RuntimeException(e);
         }
+
     }
 
     public String load(String key) throws IOException, InterruptedException {

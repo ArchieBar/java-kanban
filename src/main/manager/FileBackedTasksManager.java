@@ -59,7 +59,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      * Метод по загрузке всех задач и истории просмотров, а так же последнего установленного id из файла формата CSV.
      * В конце метода вызывается сохранение всех загруженных данных в файл формата CSV
      */
-    public static FileBackedTasksManager load(File file) throws ManagerSaveException {
+    public FileBackedTasksManager load() throws IOException, InterruptedException {
         final FileBackedTasksManager taskManager = new FileBackedTasksManager(file);
         try {
             final String csv = Files.readString(file.toPath());
