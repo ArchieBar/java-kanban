@@ -13,6 +13,11 @@ public class EpicTask extends Task {
         super(name, description);
     }
 
+    public EpicTask(String name, String description, int id) {
+        super(name, description);
+        super.setId(id);
+    }
+
     public EpicTask(String name, String description, Status status,
                     LocalDateTime startTime, Duration duration) {
         super(name, description, status, startTime, duration);
@@ -54,6 +59,5 @@ public class EpicTask extends Task {
         if (startTime != null && endTime != null) {
             return Duration.between(startTime, endTime);
         } else return null;
-
     }
 }

@@ -34,7 +34,7 @@ public class CsvFormat {
                     subTask.getStatus() + "," +
                     subTask.getDescription() + "," +
                     subTask.getIdEpicTask() + "," +
-                    subTask.getStartTime().format(Task.DATE_TIME_FORMATTER) + "," +
+                    subTask.getStartTime() + "," +
                     subTask.getDuration();
         } else {
             return task.getId() + "," +
@@ -43,7 +43,7 @@ public class CsvFormat {
                     task.getStatus() + "," +
                     task.getDescription() + "," +
                     null + "," +
-                    task.getStartTime().format(Task.DATE_TIME_FORMATTER) + "," +
+                    task.getStartTime() + "," +
                     task.getDuration();
 
         }

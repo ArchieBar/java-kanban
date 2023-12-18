@@ -37,7 +37,7 @@ public class HttpTaskServer {
     private final HttpServer server;
     private final TaskManager taskManager;
 
-    public HttpTaskServer() throws IOException {
+    public HttpTaskServer() throws IOException, InterruptedException {
         this(Manager.getHttpTaskManager());
     }
 

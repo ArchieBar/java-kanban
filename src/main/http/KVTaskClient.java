@@ -27,6 +27,7 @@ public class KVTaskClient {
                     .GET()
                     .uri(URI.create(url + "register"))
                     .build();
+            System.out.println("Регистрация прошла успешно, API_TOKEN: " + client.send(request, handler).body());
             return client.send(request, handler).body();
         } catch (IOException e) {
             System.out.println("Ошибка IOException!");
@@ -42,13 +43,13 @@ public class KVTaskClient {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + "load/" + key + "?apiToken=" + apiToken))
                     .GET()
+                    .uri(URI.create(url + "load/" + key + "?apiToken=" + apiToken))
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
                 // FIXME Добавить нормальное опсиание ошибки
-                throw new ManagerSaveException("Что-то пошло не так... Сервер вернул код:" + response.statusCode());
+                System.out.println("Что-то пошло не так... Сервер вернул код:" + response.statusCode());
             }
             return response.body();
         } catch (IOException | InterruptedException e) {

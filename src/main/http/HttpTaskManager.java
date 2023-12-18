@@ -24,11 +24,14 @@ public class HttpTaskManager extends FileBackedTasksManager {
     private final KVTaskClient client;
     private final int PORT;
 
-    public HttpTaskManager(int port) throws MalformedURLException {
+    public HttpTaskManager(int port, Boolean load) throws IOException, InterruptedException {
         super(null);
         PORT = port;
         gson = Manager.getGson();
         client = new KVTaskClient(port);
+        if (load) {
+            load();
+        }
     }
 
     @Override
@@ -51,10 +54,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
         }
     }
 
-    @Override
-    public HttpTaskManager load() throws IOException, InterruptedException {
-        HttpTaskManager httpTaskManager = new HttpTaskManager(PORT);
-
+    public void load() throws IOException, InterruptedException {
         JsonElement tasks_JE = JsonParser.parseString(client.load("tasks"));
         JsonElement subTasks_JE = JsonParser.parseString(client.load("subTasks"));
         JsonElement epicTasks_JE = JsonParser.parseString(client.load("epicTasks"));
@@ -69,19 +69,19 @@ public class HttpTaskManager extends FileBackedTasksManager {
             for (JsonElement task : tasks_JA) {
                 Task currentTask = gson.fromJson(task, Task.class);
 
-                httpTaskManager.allTasks.put(currentTask.getId(), currentTask);
+                allTasks.put(currentTask.getId(), currentTask);
             }
 
             for (JsonElement subTask : subTasks_JA) {
                 SubTask currentSubTask = gson.fromJson(subTask, SubTask.class);
 
-                httpTaskManager.allSubTasks.put(currentSubTask.getId(), currentSubTask);
+                allSubTasks.put(currentSubTask.getId(), currentSubTask);
             }
 
             for (JsonElement epicTask : epicTasks_JA) {
                 EpicTask currentEpictask = gson.fromJson(epicTask, EpicTask.class);
 
-                httpTaskManager.allEpicTasks.put(currentEpictask.getId(), currentEpictask);
+                allEpicTasks.put(currentEpictask.getId(), currentEpictask);
             }
         }
 
@@ -91,10 +91,8 @@ public class HttpTaskManager extends FileBackedTasksManager {
             for (JsonElement historyId : history_JA) {
                 int currentHistoryTask = gson.fromJson(historyId, Integer.class);
 
-                httpTaskManager.historyManager.addHistory(findTask(currentHistoryTask));
+                historyManager.addHistory(findTask(currentHistoryTask));
             }
         }
-
-        return httpTaskManager;
     }
 }

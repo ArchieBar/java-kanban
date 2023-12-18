@@ -15,14 +15,13 @@ public class Manager {
         return new InMemoryTaskManager();
     }
 
-    public static HttpTaskManager getHttpTaskManager() throws MalformedURLException {
-        return new HttpTaskManager(8078);
+    public static HttpTaskManager getHttpTaskManager() throws IOException, InterruptedException {
+        return new HttpTaskManager(8078, true);
     }
     public static FileBackedTasksManager getFileBackedTasksManager() throws ManagerSaveException {
         File file = new File("resources/dataMemory.csv");
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         try {
-            return fileBackedTasksManager.load();
+            return FileBackedTasksManager.load(file);
         } catch (ManagerSaveException e) {
             throw new ManagerSaveException("Невозможно загрузить файл: " + file.getName());
         } catch (IOException | InterruptedException e) {

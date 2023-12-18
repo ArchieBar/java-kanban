@@ -44,6 +44,9 @@ public class KVServer {
                     return;
                 }
                 String response = data.get(key);
+                if (response == null) {
+                    h.sendResponseHeaders(404, 0);
+                }
                 sendText(h, response);
             } else {
                 System.out.println("/load ждёт GET-запрос, а получил: " + h.getRequestMethod());
