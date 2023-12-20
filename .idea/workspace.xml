@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="793d4263-e1f9-4827-b300-efadf6688f5b" name="Changes" comment="" />
+    <list default="true" id="793d4263-e1f9-4827-b300-efadf6688f5b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/test/managerTest/HttpTaskServerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-kanban/main/http/HttpTaskManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-kanban/main/http/HttpTaskManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-kanban/main/http/KVTaskClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-kanban/main/http/KVTaskClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/java-kanban/managerTest/HttpTaskManagerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/java-kanban/managerTest/HttpTaskManagerTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/http/HttpTaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/http/HttpTaskManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/http/HttpTaskServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/http/HttpTaskServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/http/KVTaskClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/http/KVTaskClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/managerTest/HttpTaskManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/managerTest/HttpTaskManagerTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -100,7 +110,7 @@
       <recent name="tasks" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.All in java-kanban">
+  <component name="RunManager" selected="JUnit.HttpTaskServerTest.getSubtaskForEpic">
     <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main.Main" />
       <module name="java-kanban" />
@@ -116,7 +126,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FileBackedTasksManagerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="HttpTaskServerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="java-kanban" />
       <extension name="coverage">
         <pattern>
@@ -125,13 +135,13 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="managerTest" />
-      <option name="MAIN_CLASS_NAME" value="managerTest.FileBackedTasksManagerTest" />
+      <option name="MAIN_CLASS_NAME" value="managerTest.HttpTaskServerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="HttpTaskManagerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="HttpTaskServerTest.getHistory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="java-kanban" />
       <extension name="coverage">
         <pattern>
@@ -140,29 +150,14 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="managerTest" />
-      <option name="MAIN_CLASS_NAME" value="managerTest.HttpTaskManagerTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="HttpTaskManagerTest.CheckingForCorrectnessOfExceptionOutputAtTimeIntersection" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="java-kanban" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="managerTest.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="managerTest" />
-      <option name="MAIN_CLASS_NAME" value="managerTest.HttpTaskManagerTest" />
-      <option name="METHOD_NAME" value="CheckingForCorrectnessOfExceptionOutputAtTimeIntersection" />
+      <option name="MAIN_CLASS_NAME" value="managerTest.HttpTaskServerTest" />
+      <option name="METHOD_NAME" value="getHistory" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="HttpTaskManagerTest.testLoadAndSaveWithThreeTasks" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="HttpTaskServerTest.getPrioritizedTasks" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="java-kanban" />
       <extension name="coverage">
         <pattern>
@@ -171,8 +166,24 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="managerTest" />
-      <option name="MAIN_CLASS_NAME" value="managerTest.HttpTaskManagerTest" />
-      <option name="METHOD_NAME" value="testLoadAndSaveWithThreeTasks" />
+      <option name="MAIN_CLASS_NAME" value="managerTest.HttpTaskServerTest" />
+      <option name="METHOD_NAME" value="getPrioritizedTasks" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HttpTaskServerTest.getSubtaskForEpic" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="java-kanban" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="managerTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="managerTest" />
+      <option name="MAIN_CLASS_NAME" value="managerTest.HttpTaskServerTest" />
+      <option name="METHOD_NAME" value="getSubtaskForEpic" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -180,11 +191,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.HttpTaskServerTest.getSubtaskForEpic" />
         <item itemvalue="JUnit.All in java-kanban" />
-        <item itemvalue="JUnit.HttpTaskManagerTest" />
-        <item itemvalue="JUnit.FileBackedTasksManagerTest" />
-        <item itemvalue="JUnit.HttpTaskManagerTest.CheckingForCorrectnessOfExceptionOutputAtTimeIntersection" />
-        <item itemvalue="JUnit.HttpTaskManagerTest.testLoadAndSaveWithThreeTasks" />
+        <item itemvalue="JUnit.HttpTaskServerTest.getPrioritizedTasks" />
+        <item itemvalue="JUnit.HttpTaskServerTest" />
+        <item itemvalue="JUnit.HttpTaskServerTest.getHistory" />
       </list>
     </recent_temporary>
   </component>
@@ -206,42 +217,26 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/KVServer.java</url>
-          <line>39</line>
-          <option name="timeStamp" value="25" />
+          <url>file://$PROJECT_DIR$/test/managerTest/HttpTaskServerTest.java</url>
+          <line>103</line>
+          <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/csv/CsvFormat.java</url>
-          <line>39</line>
-          <option name="timeStamp" value="29" />
+          <url>file://$PROJECT_DIR$/test/managerTest/HttpTaskServerTest.java</url>
+          <line>135</line>
+          <option name="timeStamp" value="48" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Main.java</url>
-          <line>9</line>
-          <option name="timeStamp" value="32" />
+          <url>file://$PROJECT_DIR$/src/main/http/HttpTaskServer.java</url>
+          <line>104</line>
+          <option name="timeStamp" value="50" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/http/KVTaskClient.java</url>
-          <line>41</line>
-          <properties class="main.http.KVTaskClient" method="load">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/test/managerTest/HttpTaskManagerTest.java</url>
-          <line>47</line>
-          <properties class="managerTest.HttpTaskManagerTest" method="testLoadAndSaveWithThreeTasks">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="34" />
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/http/HttpTaskServer.java</url>
+          <line>99</line>
+          <option name="timeStamp" value="51" />
         </line-breakpoint>
       </breakpoints>
-      <default-breakpoints>
-        <breakpoint enabled="true" type="java-exception" />
-      </default-breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
@@ -249,6 +244,11 @@
         <PinnedItemInfo parentTag="Manager.InMemoryHistoryManager" memberName="nodeMap" />
       </pinned-members>
     </pin-to-top-manager>
+    <watches-manager>
+      <configuration name="JUnit">
+        <watch expression="json" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/java_kanban$All_in_java_kanban.ic" NAME="All in java-kanban Coverage Results" MODIFIED="1701467385752" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

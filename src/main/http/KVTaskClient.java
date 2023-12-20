@@ -16,27 +16,16 @@ public class KVTaskClient {
     private final HttpClient client = HttpClient.newHttpClient();
     private final HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
 
-    public KVTaskClient(int port) throws MalformedURLException {
+    public KVTaskClient(int port) throws IOException, InterruptedException {
         url = new URL("http://localhost:" + port + "/");
-        apiToken = register(url);
-    }
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(url + "register"))
+                .build();
 
-    private String register(URL url) {
-        try{
-            HttpRequest request = HttpRequest.newBuilder()
-                    .GET()
-                    .uri(URI.create(url + "register"))
-                    .build();
-            System.out.println("Регистрация прошла успешно, API_TOKEN: " + client.send(request, handler).body());
-            return client.send(request, handler).body();
-        } catch (IOException e) {
-            System.out.println("Ошибка IOException!");
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            System.out.println("Ошибка InterruptedException!");
-            throw new RuntimeException(e);
-        }
+        HttpResponse<String> response = client.send(request, handler);
 
+        apiToken = response.body();
     }
 
     public String load(String key) throws IOException, InterruptedException {
@@ -44,7 +33,7 @@ public class KVTaskClient {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
-                    .uri(URI.create(url + "load/" + key + "?apiToken=" + apiToken))
+                    .uri(URI.create(url + "load/" + key + "?API_TOKEN=" + apiToken))
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
@@ -62,7 +51,7 @@ public class KVTaskClient {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + "save/" + key + "?apiToken=" + apiToken))
+                    .uri(URI.create(url + "save/" + key + "?API_TOKEN=" + apiToken))
                     .POST(HttpRequest.BodyPublishers.ofString(value))
                     .build();
             HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());

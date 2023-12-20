@@ -4,29 +4,22 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import main.KVServer;
 import main.manager.FileBackedTasksManager;
 import main.manager.Manager;
-import main.manager.ManagerSaveException;
 import main.tasks.EpicTask;
 import main.tasks.SubTask;
 import main.tasks.Task;
 
-import javax.swing.text.StyledEditorKit;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class HttpTaskManager extends FileBackedTasksManager {
     private final Gson gson;
     private final KVTaskClient client;
-    private final int PORT;
 
     public HttpTaskManager(int port, Boolean load) throws IOException, InterruptedException {
         super(null);
-        PORT = port;
         gson = Manager.getGson();
         client = new KVTaskClient(port);
         if (load) {

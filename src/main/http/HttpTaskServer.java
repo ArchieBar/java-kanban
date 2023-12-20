@@ -96,9 +96,9 @@ public class HttpTaskServer {
                         }
                     } else if (Pattern.matches("^/tasks/subTask/epic/\\d+$", path)) {
                         String pathId = path.replaceFirst("/tasks/subTask/epic/", "");
-                        Integer id = parsePathId(pathId);
-                        if (!taskManager.getAllEpicTasks().contains(id)) {
-                            System.out.println("Epic с таким id:" + id + "не найден.");
+                        int id = parsePathId(pathId);
+                        if (!taskManager.getAllEpicTasks().contains(taskManager.getEpicTaskById(id))) {
+                            System.out.println("Epic с таким id: " + id + " не найден.");
                             httpExchange.sendResponseHeaders(404,0);
                         }
                         if (id != -1) {

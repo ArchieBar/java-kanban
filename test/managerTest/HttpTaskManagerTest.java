@@ -1,10 +1,6 @@
 package managerTest;
 
 import main.http.HttpTaskManager;
-import main.manager.TaskManager;
-import managerTest.AbstractTaskManagerTest;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
